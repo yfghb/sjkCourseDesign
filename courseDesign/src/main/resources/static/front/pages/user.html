@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+    <div id="app">
+        <el-container>
+<!-- 导航栏 -->
+            <el-header>
+                <el-row>
+                    <el-col :span="16" :offset="2">
+                        <div>
+                            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                                <el-menu-item index="1">首页</el-menu-item>
+                                <el-menu-item index="2">个人中心</el-menu-item>
+                                <el-menu-item index="3" :disabled="activeDisabled">审核管理</el-menu-item>
+                            </el-menu>
+                        </div>
+                    </el-col>
+                    <el-col :span="4" :offset="2">
+                        <el-button type="danger" icon="el-icon-switch-button">退出登录</el-button>
+                    </el-col>
+                </el-row>
+            </el-header>
+<!-- 导航栏 -->
+            <el-main>      
+                main
+            </el-main>
+        </el-container>
+
+    </div>
+
+    <script src="../js/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../js/md5.js"></script>
+    <script>
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                activeIndex: '2',
+                activeDisabled: false, //是否开启审核禁用
+
+                formData: {
+                    title: '',
+                    account: '123456',
+                    is_admin: true,
+                },
+            },
+            created() {
+                if(this.formData.is_admin){
+                    this.activeDisabled = false;
+                }else this.activeDisabled = true;
+
+            },
+            methods: {
+                handleSelect(key, keyPath) {
+                    switch(key){
+                        case '1':
+                            window.location.href = "main.html?";
+                            break;
+                        case '2':
+                            window.location.href = "user.html?" + this.formData.account;
+                            break;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

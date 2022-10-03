@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/signIn.css">
+</head>
+<body>
+
+<video autoplay loop muted preload>
+    <source src="../video/background.mp4" type="video/mp4"  />
+</video>
+
+<div id="app" >
+
+    <el-container>
+        <el-main>
+            <h1 style="color: #FFFFFF; margin-top: 80px;">用户登录</h1>
+            <!--主界面-->
+            <div class="userInput">
+                <el-form ref="formData" :model="formData" :rules="rules">
+                    <el-form-item prop="account">
+                        <el-input placeholder="请输入账号" v-model="formData.account"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="password">
+                        <el-input placeholder="请输入密码" v-model="formData.password" show-password></el-input>
+                    </el-form-item>
+                </el-form>
+                <el-form>
+                    <el-form-item>
+                        <el-button type="primary" @click="signIn('formData')">登入</el-button>
+                        <el-button type="info" @click="dialogFormVisible = true">注册</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <!--新增表单弹窗-->
+            <el-dialog :visible.sync="dialogFormVisible" width="30%">
+                <div class="grid-content">
+                    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="用户名" prop="name">
+                            <el-input v-model.number="ruleForm.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="账号" prop="account">
+                            <el-input v-model.number="ruleForm.account"></el-input>
+                        </el-form-item>
+                        <el-form-item  label="密码" prop="password">
+                            <el-input id="rPwd" type="password" v-model="ruleForm.password" show-password></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="checkPass">
+                            <el-input type="password" v-model="ruleForm.checkPass" show-password ></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <el-form>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                            <el-button type="info" @click="resetForm('ruleForm')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+
+            </el-dialog>
+
+        </el-main>
+    </el-container>
+</div>
+
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="../js/vue.js"></script>
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../js/md5.js"></script>
+    <script>
+        var check = (rule, value, callback) => {
+            // console.log(value);
+            var pass = document.getElementById("rPwd").value;
+            // console.log(pass);
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== pass) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
+        };
+        var app = new Vue({
+            el: '#app',
+            data: {
+                dialogFormVisible: false,//编辑表单是否可见
+                formData: {
+                    account:'',
+                    password:'',
+                    name:'',
+                },//表单数据
+                ruleForm: {
+                    name:'',
+                    account: '',
+                    password: '',
+                    checkPass:'',
+                },
+                //新增用户的数据校验
+                rules: {
+                    name: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
+                    account: [
+                        { required: true, message: '账号不能为空', trigger: 'blur' },
+                        { pattern: /^[a-zA-Z0-9]{6,16}$/, message: '账户不能包含特殊字符,长度6-16位', trigger: 'blur' },
+                    ],
+                    password: [
+                        { required: true, message: '请填写密码', trigger: 'blur' },
+                        { pattern:/^[a-zA-Z0-9]+$/, message:'密码不能包含特殊字符', trigger: 'blur'},
+                    ],
+                    checkPass: [{ validator: check, trigger: 'blur'}],
+
+                }
+
+            },
+            methods: {
+                signIn(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            axios.get("http://localhost:8080/user/account?account="+this.formData.account).then((res)=>{
+                                if(res.data.data === null)res.data.flag = false;//账号出错导致res为空
+                                const json = JSON.stringify(res.data.data);//格式化Json数据
+                                const r = eval('(' + json + ')');//转json字符串
+                                const md5Password = hex_md5(this.formData.password + this.formData.account);
+
+                                if(res.data.flag && md5Password === r.password) {
+                                    window.location.href = "main.html?" + this.formData.account;
+                                }else{
+                                    console.log(r);
+                                    this.$message.error("账号或密码不正确！");
+                                }
+                            })//以账号查询
+                        } else return false;
+                    });
+                },
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            this.formData.account = this.ruleForm.account;
+                            this.formData.name = this.ruleForm.name;
+                            const md5Password = hex_md5(this.ruleForm.password + this.ruleForm.account);//使用MD5加密
+                            this.formData.password = md5Password;
+                            console.log(this.ruleForm.password);
+                            console.log(this.formData.password);
+                            axios.post("http://localhost:8080/user", this.formData).then((res)=>{
+                                if(res.data.flag){
+                                    this.$message.success("注册成功！");
+                                    this.formData.password = '';
+                                    this.ruleForm.checkPass = '';
+                                } else {
+                                    console.log(this.formData);
+                                    // this.resetForm("formData");
+                                    // this.resetForm("ruleForm");
+                                    this.$message.error("账号已存在！");
+                                }
+                            })
+
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+
+            }
+        })
+
+    </script>
+
+</body>
+</html>
