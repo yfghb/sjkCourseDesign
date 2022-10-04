@@ -7,8 +7,11 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/forumsjk
       username: root
-      password: root
+      password: 2018HZyz
 
 mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印日志
