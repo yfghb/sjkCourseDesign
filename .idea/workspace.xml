@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f47bf19a-b580-4afe-a3b8-192a14cf6ed2" name="Changes" comment="简单功能">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/_2022_10_4_10_45___Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2022_10_4_10_45_取消提交了变更_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/controller/CommentConroller.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/controller/PowerController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/dao/CommentDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/dao/PowerDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/service/CommentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/service/PowerService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/service/impl/CommentServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/service/impl/PowerServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/database.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/java/com/itheima/SSMP_Application.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/java/com/itheima/config/MPConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/java/com/itheima/controller/BookController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/java/com/itheima/controller/utils/ProjectExceptionAdvice.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/java/com/itheima/controller/utils/R.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/java/com/itheima/dao/BookDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/java/com/itheima/domain/Book.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/java/com/itheima/service/IBookService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/java/com/itheima/service/impl/BookServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/js/axios-0.18.0.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/js/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/js/jquery.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/js/vue.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/pages/books.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/elementui/fonts/element-icons.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/elementui/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/elementui/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/font-awesome/css/font-awesome.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/font-awesome/css/font-awesome.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/font-awesome/fonts/FontAwesome.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/font-awesome/fonts/fontawesome-webfont.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/font-awesome/fonts/fontawesome-webfont.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/font-awesome/fonts/fontawesome-webfont.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/font-awesome/fonts/fontawesome-webfont.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/main/resources/static/plugins/font-awesome/fonts/fontawesome-webfont.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/test/java/com/itheima/dao/BookDaoTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/src/test/java/com/itheima/service/BookServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/SSMP-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/SSMP-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/com/itheima/SSMP_Application.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/com/itheima/config/MPConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/com/itheima/controller/BookController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/com/itheima/controller/utils/ProjectExceptionAdvice.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/com/itheima/controller/utils/R.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/com/itheima/dao/BookDao.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/com/itheima/domain/Book.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/com/itheima/service/IBookService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/com/itheima/service/impl/BookServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/js/axios-0.18.0.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/js/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/js/jquery.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/js/vue.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/pages/books.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/elementui/fonts/element-icons.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/elementui/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/elementui/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/font-awesome/css/font-awesome.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/font-awesome/css/font-awesome.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/font-awesome/fonts/FontAwesome.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/font-awesome/fonts/fontawesome-webfont.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/font-awesome/fonts/fontawesome-webfont.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/font-awesome/fonts/fontawesome-webfont.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/font-awesome/fonts/fontawesome-webfont.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/classes/static/plugins/font-awesome/fonts/fontawesome-webfont.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/maven-archiver/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/test-classes/com/itheima/dao/BookDaoTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/课程设计大纲/后端参考代码/SSMP/target/test-classes/com/itheima/service/BookServiceTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/service/EssayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/courseDesign/src/main/java/com/coursedesign/service/EssayService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="createModuleGroups" value="true" />
+        <option name="excludeTargetFolder" value="false" />
+        <option name="keepSourceFolders" value="false" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2EnxgoWo00u55Ln90B5a8sh7WCz" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../SSMP" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\SourseDesign\sjkCourseDesign\courseDesign\src\main\java\com\coursedesign\config" />
+      <recent name="D:\SourseDesign\sjkCourseDesign\courseDesign\src\test\java\com\coursedesign\dao" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.CourseDesignApplication">
+    <configuration name="UserDaoTestCase" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="courseDesign" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.coursedesign.dao.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.coursedesign.dao" />
+      <option name="MAIN_CLASS_NAME" value="com.coursedesign.dao.UserDaoTestCase" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CourseDesignApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="courseDesign" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.coursedesign.CourseDesignApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.UserDaoTestCase" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f47bf19a-b580-4afe-a3b8-192a14cf6ed2" name="Changes" comment="" />
+      <created>1663245263680</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1663245263680</updated>
+      <workItem from="1663245265305" duration="1028000" />
+      <workItem from="1663246371581" duration="175000" />
+      <workItem from="1663246570986" duration="654000" />
+      <workItem from="1663247252986" duration="665000" />
+      <workItem from="1663331646199" duration="83000" />
+      <workItem from="1663331758366" duration="2639000" />
+      <workItem from="1663378723036" duration="7051000" />
+      <workItem from="1663399830009" duration="1533000" />
+      <workItem from="1663401653013" duration="1448000" />
+      <workItem from="1663403879217" duration="1431000" />
+      <workItem from="1663512552845" duration="675000" />
+      <workItem from="1663593953503" duration="901000" />
+      <workItem from="1663597062775" duration="1219000" />
+      <workItem from="1663635004720" duration="3709000" />
+      <workItem from="1663645709904" duration="7532000" />
+      <workItem from="1663939560204" duration="1188000" />
+      <workItem from="1663980719276" duration="1897000" />
+      <workItem from="1664014544683" duration="6351000" />
+      <workItem from="1664072602336" duration="16147000" />
+      <workItem from="1664780885216" duration="878000" />
+      <workItem from="1664782095078" duration="99000" />
+      <workItem from="1664851095878" duration="1954000" />
+      <workItem from="1664878503050" duration="1546000" />
+      <workItem from="1664880347002" duration="1946000" />
+    </task>
+    <task id="LOCAL-00001" summary="init">
+      <created>1663246870220</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1663246870220</updated>
+    </task>
+    <task id="LOCAL-00002" summary="init">
+      <created>1663247444030</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1663247444030</updated>
+    </task>
+    <task id="LOCAL-00003" summary="init">
+      <created>1664852413020</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1664852413020</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init" />
+    <MESSAGE value="简单功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="简单功能" />
+  </component>
+</project>

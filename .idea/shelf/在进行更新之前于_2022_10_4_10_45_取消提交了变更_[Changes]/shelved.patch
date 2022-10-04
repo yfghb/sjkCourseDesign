@@ -1,0 +1,766 @@
+Index: courseDesign/src/test/java/com/coursedesign/CourseDesignApplicationTests.java
+===================================================================
+diff --git a/courseDesign/src/test/java/com/coursedesign/CourseDesignApplicationTests.java b/courseDesign/src/test/java/com/coursedesign/CourseDesignApplicationTests.java
+deleted file mode 100644
+--- a/courseDesign/src/test/java/com/coursedesign/CourseDesignApplicationTests.java	(revision 1c3ea2f8927761e2908f4753f887811bb0397750)
++++ /dev/null	(revision 1c3ea2f8927761e2908f4753f887811bb0397750)
+@@ -1,13 +0,0 @@
+-package com.coursedesign;
+-
+-import org.junit.jupiter.api.Test;
+-import org.springframework.boot.test.context.SpringBootTest;
+-
+-@SpringBootTest
+-class CourseDesignApplicationTests {
+-
+-    @Test
+-    void contextLoads() {
+-    }
+-
+-}
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"CompilerConfiguration\">\r\n    <annotationProcessing>\r\n      <profile name=\"Maven default annotation processors profile\" enabled=\"true\">\r\n        <sourceOutputDir name=\"target/generated-sources/annotations\" />\r\n        <sourceTestOutputDir name=\"target/generated-test-sources/test-annotations\" />\r\n        <outputRelativeToContentRoot value=\"true\" />\r\n        <module name=\"courseDesign\" />\r\n      </profile>\r\n    </annotationProcessing>\r\n  </component>\r\n  <component name=\"JavacSettings\">\r\n    <option name=\"ADDITIONAL_OPTIONS_OVERRIDE\">\r\n      <module name=\"courseDesign\" options=\"-parameters\" />\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+--- a/.idea/compiler.xml	(revision 1c3ea2f8927761e2908f4753f887811bb0397750)
++++ b/.idea/compiler.xml	(date 1664851143924)
+@@ -2,6 +2,7 @@
+ <project version="4">
+   <component name="CompilerConfiguration">
+     <annotationProcessing>
++      <profile default="true" name="Default" enabled="true" />
+       <profile name="Maven default annotation processors profile" enabled="true">
+         <sourceOutputDir name="target/generated-sources/annotations" />
+         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+Index: courseDesign/src/main/java/com/coursedesign/domain/Essay.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/domain/Essay.java b/courseDesign/src/main/java/com/coursedesign/domain/Essay.java
+new file mode 100644
+--- /dev/null	(date 1663638069094)
++++ b/courseDesign/src/main/java/com/coursedesign/domain/Essay.java	(date 1663638069094)
+@@ -0,0 +1,20 @@
++package com.coursedesign.domain;
++
++import java.sql.Timestamp;
++import lombok.Data;
++
++@Data
++public class Essay {
++
++    private Integer id;
++    private Integer essay_id;
++    private Integer check_id;
++    private String title;
++    private String article;
++    private Timestamp create_time;
++    private Integer praise;
++    private boolean is_visible;
++    private boolean is_checked;
++}
++
++
+Index: courseDesign/src/main/java/com/coursedesign/config/MPConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/config/MPConfig.java b/courseDesign/src/main/java/com/coursedesign/config/MPConfig.java
+new file mode 100644
+--- /dev/null	(date 1663650813003)
++++ b/courseDesign/src/main/java/com/coursedesign/config/MPConfig.java	(date 1663650813003)
+@@ -0,0 +1,20 @@
++package com.coursedesign.config;
++
++
++import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
++import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
++import org.mybatis.spring.batch.MyBatisPagingItemReader;
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++
++@Configuration
++public class MPConfig {
++    @Bean
++    public MybatisPlusInterceptor mybatisPlusInterceptor() {
++        //1.定义MP拦截器（空壳子）
++        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
++        //2.添加具体拦截器
++        interceptor.addInnerInterceptor(new PaginationInnerInterceptor());//分页拦截器
++        return interceptor;
++    }//交给spring管理的MP的拦截器
++}
+Index: courseDesign/src/main/java/com/coursedesign/service/UserService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/service/UserService.java b/courseDesign/src/main/java/com/coursedesign/service/UserService.java
+new file mode 100644
+--- /dev/null	(date 1664096061649)
++++ b/courseDesign/src/main/java/com/coursedesign/service/UserService.java	(date 1664096061649)
+@@ -0,0 +1,14 @@
++package com.coursedesign.service;
++
++import com.baomidou.mybatisplus.core.metadata.IPage;
++import com.baomidou.mybatisplus.extension.service.IService;
++import com.coursedesign.domain.User;
++
++
++public interface UserService extends IService<User> {
++
++    public void remove(Long id);
++
++//    IPage<User> getPage(int current, int size);
++//    IPage<User> getPage(int current, int size, User user);
++}
+Index: courseDesign/src/main/java/com/coursedesign/service/impl/UserServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/service/impl/UserServiceImpl.java b/courseDesign/src/main/java/com/coursedesign/service/impl/UserServiceImpl.java
+new file mode 100644
+--- /dev/null	(date 1664098961920)
++++ b/courseDesign/src/main/java/com/coursedesign/service/impl/UserServiceImpl.java	(date 1664098961920)
+@@ -0,0 +1,21 @@
++package com.coursedesign.service.impl;
++
++import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
++import com.coursedesign.dao.UserDao;
++import com.coursedesign.domain.User;
++import com.coursedesign.service.UserService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Service;
++
++@Service
++public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserService {
++
++    @Autowired
++    private UserDao userDao;
++
++
++    @Override
++    public void remove(Long id) {
++
++    }
++}
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/runConfigurations.xml b/.idea/runConfigurations.xml
+new file mode 100644
+--- /dev/null	(date 1663403366712)
++++ b/.idea/runConfigurations.xml	(date 1663403366712)
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RunConfigurationProducerService">
++    <option name="ignoredProducers">
++      <set>
++        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
++      </set>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+Index: courseDesign/src/main/java/com/coursedesign/controller/UserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/controller/UserController.java b/courseDesign/src/main/java/com/coursedesign/controller/UserController.java
+new file mode 100644
+--- /dev/null	(date 1664098036429)
++++ b/courseDesign/src/main/java/com/coursedesign/controller/UserController.java	(date 1664098036429)
+@@ -0,0 +1,68 @@
++package com.coursedesign.controller;
++
++
++import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
++import com.baomidou.mybatisplus.core.metadata.IPage;
++import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
++import com.coursedesign.common.R;
++import com.coursedesign.domain.User;
++import com.coursedesign.service.UserService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.web.bind.annotation.*;
++
++import javax.xml.crypto.Data;
++import java.lang.reflect.Type;
++
++@RestController
++@RequestMapping("/users")
++public class UserController {
++
++    @Autowired
++    private UserService userService;
++
++    @GetMapping("/page")
++    public R<Page> page(int page, int pageSize){
++
++        //分页构造器
++        Page pageInfo = new Page<>(page,pageSize);
++
++        //条件构造器
++        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
++        //lqw.orderByDesc(User::getSort);
++        //执行查询
++        userService.page(pageInfo,lqw);
++
++        return R.success(pageInfo);
++    }
++    @PostMapping
++    public R<String> save(@RequestBody User user) {
++        userService.save(user);
++        return R.success("新增用户成功！");
++    }
++    @PutMapping
++    public R<String> update(@RequestBody User user) {
++        userService.updateById(user);
++        return R.success("修改用户信息成功！");
++    }
++    @DeleteMapping
++    public R<String> delete(Long ids) {
++        userService.removeById(ids);
++        return R.success("用户信息删除成功!");
++    }
++    @GetMapping("{id}")
++    public R<String> getById(@PathVariable Integer id) {
++        userService.getById(id);
++        return R.success("该用户信息");
++    }
++
++
++//    @GetMapping("{current}/{size}")
++//    public R getPage(@PathVariable int current,@PathVariable int size,User user) {
++//        //如果当前页码值大于总页码值,那么以总页码值作为当前页码值的查询结果
++//        IPage<User> page = userService.getPage(current,size,user);
++//        if(current > page.getPages()){
++//            page = userService.getPage((int)page.getPages(),size,user);
++//        }
++//        return new R(true, page);
++//  }
++}
+Index: courseDesign/src/main/java/com/coursedesign/service/EssayService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/service/EssayService.java b/courseDesign/src/main/java/com/coursedesign/service/EssayService.java
+new file mode 100644
+--- /dev/null	(date 1664098120912)
++++ b/courseDesign/src/main/java/com/coursedesign/service/EssayService.java	(date 1664098120912)
+@@ -0,0 +1,9 @@
++package com.coursedesign.service;
++
++import com.baomidou.mybatisplus.extension.service.IService;
++import com.coursedesign.domain.Essay;
++import com.coursedesign.domain.User;
++
++public interface EssayService extends IService<Essay> {
++
++}
+Index: courseDesign/src/main/java/com/coursedesign/service/impl/EssayServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/service/impl/EssayServiceImpl.java b/courseDesign/src/main/java/com/coursedesign/service/impl/EssayServiceImpl.java
+new file mode 100644
+--- /dev/null	(date 1664098961956)
++++ b/courseDesign/src/main/java/com/coursedesign/service/impl/EssayServiceImpl.java	(date 1664098961956)
+@@ -0,0 +1,15 @@
++package com.coursedesign.service.impl;
++
++import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
++import com.coursedesign.dao.EssayDao;
++import com.coursedesign.domain.Essay;
++import com.coursedesign.service.EssayService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Service;
++
++@Service
++public class EssayServiceImpl extends ServiceImpl<EssayDao, Essay> implements EssayService {
++
++    @Autowired
++    private EssayDao essayDao;
++}
+Index: courseDesign/src/main/resources/application.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>server:\r\n  port: 8080\r\n\r\nspring:\r\n  datasource:\r\n    druid:\r\n      driver-class-name: com.mysql.cj.jdbc.Driver\r\n      url: jdbc:mysql://localhost:3306/forumsjk\r\n      username: root\r\n      password: root\r\n\r\nmybatis-plus:\r\n  configuration:\r\n    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印日志\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/resources/application.yml b/courseDesign/src/main/resources/application.yml
+--- a/courseDesign/src/main/resources/application.yml	(revision 1c3ea2f8927761e2908f4753f887811bb0397750)
++++ b/courseDesign/src/main/resources/application.yml	(date 1663648816935)
+@@ -7,8 +7,11 @@
+       driver-class-name: com.mysql.cj.jdbc.Driver
+       url: jdbc:mysql://localhost:3306/forumsjk
+       username: root
+-      password: root
++      password: 2018HZyz
+ 
+ mybatis-plus:
++  global-config:
++    db-config:
++      id-type: auto
+   configuration:
+     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印日志
+Index: courseDesign/src/main/java/com/coursedesign/config/MybatisPlusConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/config/MybatisPlusConfig.java b/courseDesign/src/main/java/com/coursedesign/config/MybatisPlusConfig.java
+new file mode 100644
+--- /dev/null	(date 1664097447813)
++++ b/courseDesign/src/main/java/com/coursedesign/config/MybatisPlusConfig.java	(date 1664097447813)
+@@ -0,0 +1,20 @@
++package com.coursedesign.config;
++
++import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
++import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++
++/**
++ * 配置分页插件
++ */
++@Configuration
++public class MybatisPlusConfig {
++
++    @Bean
++    public MybatisPlusInterceptor mybatisPlusInterceptor(){
++        MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
++        mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
++        return mybatisPlusInterceptor;
++    }
++}
+Index: courseDesign/src/main/java/com/coursedesign/config/WebMvcConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/config/WebMvcConfig.java b/courseDesign/src/main/java/com/coursedesign/config/WebMvcConfig.java
+new file mode 100644
+--- /dev/null	(date 1664097589216)
++++ b/courseDesign/src/main/java/com/coursedesign/config/WebMvcConfig.java	(date 1664097589216)
+@@ -0,0 +1,40 @@
++package com.coursedesign.config;
++
++
++import lombok.extern.slf4j.Slf4j;
++import org.springframework.context.annotation.Configuration;
++import org.springframework.http.converter.HttpMessageConverter;
++import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
++import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
++import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
++
++import java.util.List;
++
++@Configuration
++@Slf4j
++public class WebMvcConfig extends WebMvcConfigurationSupport {
++    /**
++     * 扩展mvc框架的消息转换器
++     * @param converters
++     */
++//    @Override
++//    protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
++//        //创建一个新的消息转换器对象
++//        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
++//        //设置对象转换器，底层使用jackson将Java对象转换成json
++//        messageConverter.setObjectMapper(new JacksonObjectMapper());
++//        //将新的消息转换器加入mvc的转换器容器中
++//        converters.add(0,messageConverter);
++//    }
++
++    /**
++     * 配置静态资源映射
++     * @param registry
++     */
++    @Override
++    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
++        log.info("开始进行静态资源映射...");
++        registry.addResourceHandler("/backend/**").addResourceLocations("classpath:/backend/");
++        registry.addResourceHandler("/front/**").addResourceLocations("classpath:/front/");
++    }
++}
+Index: courseDesign/src/main/java/com/coursedesign/domain/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/domain/User.java b/courseDesign/src/main/java/com/coursedesign/domain/User.java
+new file mode 100644
+--- /dev/null	(date 1664098036681)
++++ b/courseDesign/src/main/java/com/coursedesign/domain/User.java	(date 1664098036681)
+@@ -0,0 +1,17 @@
++package com.coursedesign.domain;
++
++
++import lombok.Data;
++
++@Data
++public class User {
++
++    private Integer id;
++    private String name;
++    private String head_image;
++    private String password;
++    private String account;
++    private String message;
++}
++
++
+Index: courseDesign/src/main/java/com/coursedesign/dao/EssayDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/dao/EssayDao.java b/courseDesign/src/main/java/com/coursedesign/dao/EssayDao.java
+new file mode 100644
+--- /dev/null	(date 1664098961912)
++++ b/courseDesign/src/main/java/com/coursedesign/dao/EssayDao.java	(date 1664098961912)
+@@ -0,0 +1,9 @@
++package com.coursedesign.dao;
++
++import com.baomidou.mybatisplus.core.mapper.BaseMapper;
++import com.coursedesign.domain.Essay;
++import org.apache.ibatis.annotations.Mapper;
++
++@Mapper
++public interface EssayDao extends BaseMapper<Essay> {
++}
+Index: courseDesign/src/main/java/com/coursedesign/domain/Comment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/domain/Comment.java b/courseDesign/src/main/java/com/coursedesign/domain/Comment.java
+new file mode 100644
+--- /dev/null	(date 1663638069138)
++++ b/courseDesign/src/main/java/com/coursedesign/domain/Comment.java	(date 1663638069138)
+@@ -0,0 +1,18 @@
++package com.coursedesign.domain;
++
++
++import lombok.Data;
++
++import java.sql.Timestamp;
++
++@Data
++public class Comment {
++
++    private Integer essay_id;
++    private Integer comment_id;
++    private String head_image;
++    private String name;
++    private String comment_text;
++    private Timestamp create_time;
++    private Integer praise;
++}
+Index: courseDesign/src/main/java/com/coursedesign/controller/EssayController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/controller/EssayController.java b/courseDesign/src/main/java/com/coursedesign/controller/EssayController.java
+new file mode 100644
+--- /dev/null	(date 1664099025079)
++++ b/courseDesign/src/main/java/com/coursedesign/controller/EssayController.java	(date 1664099025079)
+@@ -0,0 +1,39 @@
++package com.coursedesign.controller;
++
++
++import com.coursedesign.common.R;
++import com.coursedesign.domain.Essay;
++import com.coursedesign.domain.User;
++import com.coursedesign.service.EssayService;
++import com.coursedesign.service.UserService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.web.bind.annotation.*;
++
++@RestController
++@RequestMapping("/essays")
++public class EssayController {
++
++    @Autowired
++    private EssayService essayService;
++
++    @PostMapping
++    public R<String> save(@RequestBody Essay essay) {
++        essayService.save(essay);
++        return R.success("新增文章成功！");
++    }
++    @PutMapping
++    public R<String> update(@RequestBody Essay essay) {
++        essayService.updateById(essay);
++        return R.success("修改文章信息成功！");
++    }
++    @DeleteMapping
++    public R<String> delete(Long ids) {
++        essayService.removeById(ids);
++        return R.success("文章信息删除成功!");
++    }
++    @GetMapping("{id}")
++    public R<String> getById(@PathVariable Integer id) {
++        essayService.getById(id);
++        return R.success("该用户信息");
++    }
++}
+Index: courseDesign/src/main/java/com/coursedesign/domain/Power.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/domain/Power.java b/courseDesign/src/main/java/com/coursedesign/domain/Power.java
+new file mode 100644
+--- /dev/null	(date 1663638069182)
++++ b/courseDesign/src/main/java/com/coursedesign/domain/Power.java	(date 1663638069182)
+@@ -0,0 +1,11 @@
++package com.coursedesign.domain;
++
++import lombok.Data;
++
++@Data
++public class Power {
++
++    private Integer id;
++    private boolean is_admin;
++    private boolean is_disabled;
++}
+Index: 课程设计大纲/后端参考代码/SSMP/.idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/课程设计大纲/后端参考代码/SSMP/.idea/runConfigurations.xml b/课程设计大纲/后端参考代码/SSMP/.idea/runConfigurations.xml
+new file mode 100644
+--- /dev/null	(date 1663404422989)
++++ b/课程设计大纲/后端参考代码/SSMP/.idea/runConfigurations.xml	(date 1663404422989)
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RunConfigurationProducerService">
++    <option name="ignoredProducers">
++      <set>
++        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
++      </set>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+Index: 课程设计大纲/后端参考代码/SSMP/.idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/课程设计大纲/后端参考代码/SSMP/.idea/vcs.xml b/课程设计大纲/后端参考代码/SSMP/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1663404423033)
++++ b/课程设计大纲/后端参考代码/SSMP/.idea/vcs.xml	(date 1663404423033)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$/../../.." vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: courseDesign/src/main/java/com/coursedesign/dao/UserDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/main/java/com/coursedesign/dao/UserDao.java b/courseDesign/src/main/java/com/coursedesign/dao/UserDao.java
+new file mode 100644
+--- /dev/null	(date 1664098961878)
++++ b/courseDesign/src/main/java/com/coursedesign/dao/UserDao.java	(date 1664098961878)
+@@ -0,0 +1,12 @@
++package com.coursedesign.dao;
++
++
++import com.baomidou.mybatisplus.core.mapper.BaseMapper;
++import com.coursedesign.domain.User;
++import org.apache.ibatis.annotations.Mapper;
++
++
++@Mapper
++public interface UserDao extends BaseMapper<User> {
++
++}
+Index: courseDesign/src/test/java/com/coursedesign/dao/UserDaoTestCase.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/courseDesign/src/test/java/com/coursedesign/dao/UserDaoTestCase.java b/courseDesign/src/test/java/com/coursedesign/dao/UserDaoTestCase.java
+new file mode 100644
+--- /dev/null	(date 1663649699565)
++++ b/courseDesign/src/test/java/com/coursedesign/dao/UserDaoTestCase.java	(date 1663649699565)
+@@ -0,0 +1,18 @@
++package com.coursedesign.dao;
++
++
++import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
++
++@SpringBootTest
++public class UserDaoTestCase {
++
++    @Autowired
++    private UserDao userDao;
++
++    @Test
++    void testGetById(){
++        userDao.selectById(1);
++    }
++}
+Index: .idea/uiDesigner.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/uiDesigner.xml b/.idea/uiDesigner.xml
+new file mode 100644
+--- /dev/null	(date 1663635818622)
++++ b/.idea/uiDesigner.xml	(date 1663635818622)
+@@ -0,0 +1,124 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Palette2">
++    <group name="Swing">
++      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
++      </item>
++      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="false" auto-create-binding="false" can-attach-label="true">
++        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
++        <initial-values>
++          <property name="text" value="Button" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="RadioButton" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="CheckBox" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="Label" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
++          <preferred-size width="-1" height="20" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
++      </item>
++    </group>
++  </component>
++</project>
+\ No newline at end of file
