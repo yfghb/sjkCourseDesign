@@ -30,11 +30,67 @@
                 </el-row>
             </el-header>
 <!-- 导航栏 -->
-            <el-main>      
-                main
+            <el-main style="height: 620px">
+<!--用户信息栏-->
+                <el-row :gutter="20">
+                    <el-col :span="4" :offset="2">
+                        <div>
+                            <el-image   style="width: 180px; height: 180px"
+                                        :src="formData.img">
+                            </el-image>
+                        </div>
+                    </el-col>
+                    <el-col :span="16">
+                        <div class="grid-content bg-purple">
+                            <el-descriptions direction="vertical" :column="4" border>
+                                <el-descriptions-item label="用户名">{{ formData.name }}</el-descriptions-item>
+                                <el-descriptions-item label="已发布文章" :span="2">
+                                    <el-tag size="small">{{ passedArticle }}</el-tag>
+                                </el-descriptions-item>
+                                <el-descriptions-item label="未审核">
+                                    <el-tag size="small">{{ checkingArticle }}</el-tag>
+                                </el-descriptions-item>
+                                <el-descriptions-item label="描述">{{ formData.description }}</el-descriptions-item>
+                            </el-descriptions>
+                        </div>
+                    </el-col>
+                </el-row>
+<!--用户信息栏-->
+
+<!--选择栏-->
+                <el-row>
+                    <el-col :span="10" :offset="2">
+                        <template>
+                            <el-select v-model="selectValue" placeholder="请选择">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                        :disabled="item.disabled">
+                                </el-option>
+                            </el-select>
+                        </template>
+                        <el-button type="primary">查看</el-button>
+                    </el-col>
+                    <el-col :span="10":offset="2">
+                        <el-button type="text" @click="DialogVisible = true">点击打开 Dialog</el-button>
+                    </el-col>
+                </el-row>
+<!--选择栏-->
             </el-main>
         </el-container>
-
+        <el-dialog
+                title="提示"
+                :visible.sync="DialogVisible"
+                width="30%"
+                center>
+            <span>需要注意的是内容是默认不居中的</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="centerDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 
     <script src="../js/vue.js"></script>
@@ -45,29 +101,59 @@
         const vm = new Vue({
             el: '#app',
             data: {
+                selectValue: '所有文章',
                 activeIndex: '2',
-                activeDisabled: false, //是否开启审核禁用
+                activeDisabled: false,  //是否开启审核禁用
+                passedArticle: '20',    //已通过的文章数量
+                checkingArticle: '12',  //未通过的文章数量
+                DialogVisible: false,   //对话框是否可见
 
                 formData: {
                     title: '',
+                    name: 'admin',
+                    img: '../images/sakana.png',
                     account: '123456',
+                    password: '',
                     is_admin: true,
+                    description: '文本文本',
                 },
+                options: [{
+                    value: '选项1',
+                    label: '所有文章'
+                }, {
+                    value: '选项2',
+                    label: '已通过'
+                }, {
+                    value: '选项3',
+                    label: '未通过'
+                }, {
+                    value: '选项4',
+                    label: '需要审核的文章',
+                    disabled: true,
+                }],
+
             },
             created() {
                 if(this.formData.is_admin){
                     this.activeDisabled = false;
-                }else this.activeDisabled = true;
+                    this.options[3].disabled = false;
+                }else {
+                    this.activeDisabled = true;
+                    this.options[3].disabled = true;
+                }
 
             },
             methods: {
                 handleSelect(key, keyPath) {
                     switch(key){
                         case '1':
-                            window.location.href = "main.html?";
+                            window.location.href = "main.html?" + this.formData.account;
                             break;
                         case '2':
                             window.location.href = "user.html?" + this.formData.account;
+                            break;
+                        case '3':
+                            window.location.href = "check.html?" + this.formData.account;
                             break;
                     }
                 }
