@@ -39,15 +39,15 @@ CREATE TABLE IF NOT EXISTS `comment`(
 
 
 CREATE TABLE IF NOT EXISTS `power`(
-	`id` 				INT						NOT NULL,
-    `is_admin` 			BOOLEAN 				DEFAULT FALSE, 
-    `is_disabled` 	    BOOLEAN 				DEFAULT FALSE,
-	FOREIGN key `power`(id)	REFERENCES `user`(id) ON DELETE CASCADE ON UPDATE CASCADE
+	`account` 			VARCHAR(16)			NOT NULL,
+    `is_admin` 			BOOLEAN 			DEFAULT FALSE,
+    `is_disabled` 	    BOOLEAN 			DEFAULT FALSE,
+	FOREIGN key `power`(account)	REFERENCES `user`(account) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
 INSERT INTO `user`(`name`,`account`,`password`) VALUES ('super_admin','root','root');
-INSERT INTO `power`(`id`,`is_admin`) VALUES (1,TRUE);
+INSERT INTO `power`(`account`,`is_admin`) VALUES ('administer',TRUE);
 
 
 
