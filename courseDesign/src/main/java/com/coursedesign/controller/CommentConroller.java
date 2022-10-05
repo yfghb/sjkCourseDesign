@@ -1,10 +1,10 @@
 package com.coursedesign.controller;
 
-import com.coursedesign.common.R;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.coursedesign.controller.utils.R;
 import com.coursedesign.domain.Comment;
-import com.coursedesign.domain.Essay;
 import com.coursedesign.service.CommentService;
-import com.coursedesign.service.EssayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,24 +15,38 @@ public class CommentConroller {
     @Autowired
     private CommentService commentService;
 
+    /**
+     * 新增评论
+     * @param comment 传入一个Comment实体
+     * @return boolean
+     */
     @PostMapping
-    public R<String> save(@RequestBody Comment comment) {
-        commentService.save(comment);
-        return R.success("新增评论成功！");
+    public R save(@RequestBody Comment comment) {
+        return new R(commentService.save(comment));
     }
-    @PutMapping
-    public R<String> update(@RequestBody Comment comment) {
-        commentService.updateById(comment);
-        return R.success("修改评论信息成功！");
+
+    /**
+     * 以id删除评论
+     * @param id 传入一个int类型值id
+     * @return boolean
+     */
+    @DeleteMapping("/delete/{id}")
+    public R delete(@PathVariable Integer id) {
+        return new R(commentService.removeById(id));
     }
-    @DeleteMapping
-    public R<String> delete(Long ids) {
-        commentService.removeById(ids);
-        return R.success("文章评论删除成功!");
-    }
-    @GetMapping("{id}")
-    public R<String> getById(@PathVariable Integer id) {
-        commentService.getById(id);
-        return R.success("该评论信息");
+
+    /**
+     * 评论分页
+     * @param page 一页显示page条数据
+     * @param pageSize 总共pageSize页
+     * @return 评论列表
+     */
+    @GetMapping("/page")
+    public R page(int page,int pageSize){
+        Page pageInfo = new Page<>(page,pageSize);
+        LambdaQueryWrapper<Comment> lqw = new LambdaQueryWrapper<>();
+        lqw.orderByAsc(Comment::getCreate_time);
+        commentService.page(pageInfo,lqw);
+        return new R(true,pageInfo);
     }
 }

@@ -6,6 +6,6 @@ import lombok.Data;
 public class Power {
 
     private Integer id;
-    private boolean is_admin;
-    private boolean is_disabled;
+    private boolean isAdmin;
+    private boolean isDisabled;
 }
