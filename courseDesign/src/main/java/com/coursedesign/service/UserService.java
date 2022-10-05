@@ -7,8 +7,7 @@ import com.coursedesign.domain.User;
 
 public interface UserService extends IService<User> {
 
-    public void remove(Long id);
-
+    User getByAccount(String account);
 //    IPage<User> getPage(int current, int size);
 //    IPage<User> getPage(int current, int size, User user);
 }

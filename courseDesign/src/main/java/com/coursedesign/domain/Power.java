@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Power {
 
-    private Integer id;
+    private String account;
     private boolean isAdmin;
     private boolean isDisabled;
 }

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/powers")
+@RequestMapping("/power")
 public class PowerController {
 
     @Autowired
@@ -33,4 +33,13 @@ public class PowerController {
         return new R(powerService.updateById(power));
     }
 
+    /**
+     * 新增数据
+     * @param power 传入一个power实体
+     * @return boolean
+     */
+    @PostMapping
+    public R save(@RequestBody Power power){
+        return new R(powerService.save(power));
+    }
 }

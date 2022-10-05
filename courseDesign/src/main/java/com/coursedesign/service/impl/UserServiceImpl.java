@@ -15,7 +15,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
 
     @Override
-    public void remove(Long id) {
-
+    public User getByAccount(String account) {
+        return userDao.selectByAccount(account);
     }
 }

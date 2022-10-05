@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -46,13 +46,13 @@ public class UserController {
     }
 
     /**
-     * 以id查询用户
-     * @param id 传入一个int类型值id
+     * 以account查询用户
+     * @param account 传入一个String类型值account
      * @return User类型实体
      */
-    @GetMapping("{id}")
-    public R getById(@PathVariable Integer id) {
-        return new R(true,userService.getById(id));
+    @GetMapping("/account")
+    public R getByAccount(String account) {
+        return new R(true,userService.getByAccount(account));
     }
 
 

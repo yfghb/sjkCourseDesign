@@ -94,6 +94,8 @@
                     account:'',
                     password:'',
                     name:'',
+                    isAdmin:'0',
+                    isDisabled:'0',
                 },//表单数据
                 ruleForm: {
                     name:'',
@@ -148,9 +150,15 @@
                             console.log(this.formData.password);
                             axios.post("http://localhost:8080/user", this.formData).then((res)=>{
                                 if(res.data.flag){
-                                    this.$message.success("注册成功！");
                                     this.formData.password = '';
                                     this.ruleForm.checkPass = '';
+                                    axios.post("http://localhost:8080/power",this.formData).then((res)=>{
+                                        if(res.data.flag){
+                                            this.$message.success("注册成功！");
+                                        }else{
+                                            this.$message.error("权限创建异常！");
+                                        }
+                                    })
                                 } else {
                                     console.log(this.formData);
                                     // this.resetForm("formData");
