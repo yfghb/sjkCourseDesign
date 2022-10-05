@@ -45,7 +45,7 @@ public class CommentConroller {
     public R page(int page,int pageSize){
         Page pageInfo = new Page<>(page,pageSize);
         LambdaQueryWrapper<Comment> lqw = new LambdaQueryWrapper<>();
-        lqw.orderByAsc(Comment::getCreate_time);
+        lqw.orderByAsc(Comment::getCreateTime);
         commentService.page(pageInfo,lqw);
         return new R(true,pageInfo);
     }

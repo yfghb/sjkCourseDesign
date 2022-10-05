@@ -48,7 +48,7 @@ public class EssayController {
         Page pageInfo = new Page<>(page,pageSize);
         LambdaQueryWrapper<Essay> lqw = new LambdaQueryWrapper<>();
         lqw.like(name!=null,Essay::getTitle,name);
-        lqw.orderByAsc(Essay::getCreate_time);
+        lqw.orderByAsc(Essay::getCreateTime);
         essayService.page(pageInfo,lqw);
         return new R(true,pageInfo);
     }
