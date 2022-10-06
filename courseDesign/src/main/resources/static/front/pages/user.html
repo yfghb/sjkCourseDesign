@@ -33,13 +33,13 @@
                 </el-row>
             </el-header>
 <!-- 导航栏 -->
-            <el-main style="height: 620px">
+            <el-main style="height: 700px">
 <!--用户信息栏-->
                 <el-row :gutter="20">
                     <el-col :span="4" :offset="2">
                         <div>
                             <el-image   style="width: 180px; height: 180px"
-                                        :src="formData.img">
+                                        :src="formData.headImage">
                             </el-image>
                         </div>
                     </el-col>
@@ -62,7 +62,22 @@
 
 <!--选择栏-->
                 <el-row>
-                    <el-col>
+                    <el-col :span="8">
+                        <el-upload
+                                class="upload-demo"
+                                ref="upload"
+                                action="http://localhost:8080/common/upload"
+                                :on-preview="handlePreview"
+                                :on-remove="handleRemove"
+                                :on-success="submitUpload"
+                                :on-error="errorUpload"
+                                :file-list="fileList">
+                            <el-button slot="trigger" size="small" type="primary">上传图片</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>
+
+                    </el-col>
+                    <el-col :span="10" :offset="2">
                         <template>
                             <el-select v-model="selectValue" placeholder="请选择">
                                 <el-option
@@ -76,6 +91,7 @@
                         </template>
                         <el-button type="primary">查看</el-button>
                     </el-col>
+
                 </el-row>
 <!--选择栏-->
             </el-main>
@@ -122,11 +138,12 @@
                 DialogVisible: false,   //对话框是否可见
                 identify: false,        // 验证身份是否成功
 
+                fileList: [],
                 formData: {
                     id: '',
                     title: '',
                     name: 'admin',
-                    img: '../images/',
+                    headImage: '',
                     account: '',
                     password: '',
                     is_admin: true,
@@ -169,8 +186,8 @@
                             this.formData.name = r.name;
                             this.formData.password = r.password;
                             this.formData.id = r.id;
-                            this.formData.img += r.headImage;
-                            // console.log(res.data.data);
+                            this.formData.headImage = "/common/download?name=" + r.headImage;
+
                             // console.log(json);
                             // axios.get("http://localhost:8080/essay/get/"+this.formData.id).then((res1)=>{
                             //     const json_1 = JSON.stringify(res1.data.data);//格式化Json数据
@@ -308,8 +325,33 @@
                             message: '取消'
                         });
                     });
-                }
+                },
+                submitUpload(response, file, fileList){
+                    //console.log(response.msg);
+                    this.formData.headImage = response.msg;
+                    axios.put("http://localhost:8080/user", this.formData).then((res)=>{
+                        if(res.data.flag) {
+                            this.formData.headImage =  "/common/download?name=" + response.msg;
+                            this.$message.success("上传成功！");
+                        }else this.$message.error("修改图片异常");
+                    });
 
+                },
+                errorUpload(err, file, fileList){
+                    this.$message.error("上传失败！");
+                },
+                handleRemove(file, fileList) {
+                    console.log(file, fileList);
+                },
+                handlePreview(file) {
+                    console.log(file);
+                },
+                handleExceed(files, fileList) {
+                    this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+                },
+                beforeRemove(file, fileList) {
+                    return this.$confirm(`确定移除 ${ file.name }？`);
+                }
             }
         });
     </script>

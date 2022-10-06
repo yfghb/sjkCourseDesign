@@ -2,7 +2,6 @@ package com.coursedesign.controller;
 
 import com.coursedesign.controller.utils.R;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +20,7 @@ import java.util.UUID;
 @RequestMapping("/common")
 public class CommonController {
 
-    private String basePath = "../static/front/images/";
-
-
+    private String basePath = "D:/sjkCourseDesignImages/";
     /**
      * 文件上传
      * @param file
@@ -42,6 +39,9 @@ public class CommonController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+
         return new R(fileName);
     }
 
