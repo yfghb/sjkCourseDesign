@@ -83,14 +83,13 @@
         const vm = new Vue({
             el: '#app',
             data: {
-                search: '',
-                imgSrc: '',
-                activeIndex: '1',
-                activeDisabled: false, //是否开启审核禁用
+                search: '',             //搜索框文本数据
+                activeIndex: '1',       //导航栏默认选中从左往右第一个
+                activeDisabled: false,  //是否开启审核禁用
 
                 formData: {
                     title: '',
-                    account: '123456',
+                    account: '',
                     is_admin: true,
                 },
                 itemList: [
@@ -106,13 +105,18 @@
                 if(this.formData.is_admin){
                     this.activeDisabled = false;
                 }else this.activeDisabled = true;
-
+                this.init();
             },
             methods: {
+                init(){
+                    const act = (window.location.search).substring(1);//截取url中的一部分
+                    this.formData.account = act;
+                    //console.log(this.formData.account);
+                },
                 handleSelect(key, keyPath) {
                     switch(key){
                         case '1':
-                            window.location.href = "main.html?";
+                            window.location.href = "main.html?" + this.formData.account;
                             break;
                         case '2':
                             window.location.href = "user.html?" + this.formData.account;

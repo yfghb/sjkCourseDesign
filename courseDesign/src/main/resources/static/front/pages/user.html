@@ -24,8 +24,11 @@
                             </el-menu>
                         </div>
                     </el-col>
-                    <el-col :span="4" :offset="2">
-                        <el-button type="danger" icon="el-icon-switch-button">退出登录</el-button>
+                    <el-col :span="2" :offset="2">
+                        <el-button type="danger" icon="el-icon-switch-button" @click="quit">退出登录</el-button>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="primary" @click="DialogVisible = true" icon="el-icon-s-tools">设置</el-button>
                     </el-col>
                 </el-row>
             </el-header>
@@ -59,7 +62,7 @@
 
 <!--选择栏-->
                 <el-row>
-                    <el-col :span="10" :offset="2">
+                    <el-col>
                         <template>
                             <el-select v-model="selectValue" placeholder="请选择">
                                 <el-option
@@ -73,22 +76,32 @@
                         </template>
                         <el-button type="primary">查看</el-button>
                     </el-col>
-                    <el-col :span="10":offset="2">
-                        <el-button type="text" @click="DialogVisible = true">点击打开 Dialog</el-button>
-                    </el-col>
                 </el-row>
 <!--选择栏-->
             </el-main>
         </el-container>
         <el-dialog
-                title="提示"
+                title="修改信息"
                 :visible.sync="DialogVisible"
                 width="30%"
                 center>
-            <span>需要注意的是内容是默认不居中的</span>
+            <span>
+                <template>
+                    <el-button type="primary" @click="checkUserPassword">验证您的身份</el-button>
+                </template>
+                <template>
+                    <el-button type="text" @click="updateUserName">修改用户名</el-button>
+                </template>
+                <template>
+                    <el-button type="text" @click="updateUserPwd">修改密码</el-button>
+                </template>
+                <template>
+                    <el-button type="text" @click="deleteUser">删除账户</el-button>
+                </template>
+            </span>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="centerDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+                <el-button @click="DialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="DialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -107,12 +120,14 @@
                 passedArticle: '20',    //已通过的文章数量
                 checkingArticle: '12',  //未通过的文章数量
                 DialogVisible: false,   //对话框是否可见
+                identify: false,        // 验证身份是否成功
 
                 formData: {
+                    id: '',
                     title: '',
                     name: 'admin',
-                    img: '../images/sakana.png',
-                    account: '123456',
+                    img: '../images/',
+                    account: '',
                     password: '',
                     is_admin: true,
                     description: '文本文本',
@@ -141,9 +156,39 @@
                     this.activeDisabled = true;
                     this.options[3].disabled = true;
                 }
-
+                this.init();
             },
             methods: {
+                init(){
+                    var account = (window.location.search).substring(1);//截取url中的一部分
+                    axios.get("http://localhost:8080/user/account?account="+account).then((res)=>{
+                        const json = JSON.stringify(res.data.data);//格式化Json数据
+                        const r = eval('(' + json + ')');//转json字符串
+                        if(res.data.flag) {
+                            this.formData.account = account;
+                            this.formData.name = r.name;
+                            this.formData.password = r.password;
+                            this.formData.id = r.id;
+                            this.formData.img += r.headImage;
+                            // console.log(res.data.data);
+                            // console.log(json);
+                            // axios.get("http://localhost:8080/essay/get/"+this.formData.id).then((res1)=>{
+                            //     const json_1 = JSON.stringify(res1.data.data);//格式化Json数据
+                            //     const r1 = eval('(' + json_1 + ')');//转json字符串
+                            //     if(res1.data.flag) {
+                            //         this.tableForm = r1;
+                            //     }else{
+                            //         this.$message.error("信息异常！");
+                            //     }
+                            // })//查询所有交易记录
+
+                            this.$message.success("登录成功！");
+                        }else{
+                            // console.log(account);
+                            this.$message.error("异常！");
+                        }
+                    })//以账号查询
+                },
                 handleSelect(key, keyPath) {
                     switch(key){
                         case '1':
@@ -156,7 +201,115 @@
                             window.location.href = "check.html?" + this.formData.account;
                             break;
                     }
+                },
+                quit(){
+                    window.location.href = "signIn.html?";
+                },
+                updateUserPwd() {
+                    if(this.identify){
+                        this.$prompt('修改账户密码', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            inputPattern: /^[a-zA-Z0-9]{6,16}$/,
+                            inputErrorMessage: '密码不能包含特殊字符，至少6位，最多16位'
+                        }).then(({ value }) => {
+                            const md5Password = hex_md5(value + this.formData.account);
+                            if(this.formData.password === md5Password)this.$message.warning("密码不能与原先一致");
+                            else{
+                                this.formData.password = md5Password;//更新密码
+                                axios.put("http://localhost:8080/user", this.formData).then((res)=>{
+                                    if(res.data.flag) {
+                                        this.$message.success("修改成功");
+                                    }else this.$message.error("修改异常");
+                                });
+                            }
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '取消输入'
+                            });
+                        });
+                    } else {
+                        this.$message({
+                            type:'warning',
+                            message:'请先验证您的身份',
+                        })
+                    }
+                },
+                checkUserPassword(){
+                    this.$prompt('请输入密码', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputValidator: (val) => {
+                            const md5Password = hex_md5(val + this.formData.account);
+                            if (md5Password === this.formData.password) {
+                                return true;
+                            }
+                            return false;
+                        },
+                        inputErrorMessage: '密码不正确',
+                    }).then(({ value }) => {
+                        this.$message({
+                            type: 'success',
+                            message: '验证成功',
+                        });
+                        this.identify = true;
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '取消'
+                        });
+                    });
+                },
+                updateUserName() {
+                    this.$prompt('修改用户名', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /^[\u4E00-\u9FA5a-zA-Z0-9_]{4,10}$/,
+                        inputErrorMessage: '可以汉字,英文字母,数字,下划线组成,4-10位'
+                    }).then(({ value }) => {
+                        this.formData.name = value;//更新用户名
+                        axios.put("http://localhost:8080/user", this.formData).then((res)=>{
+                            if(res.data.flag) {
+                                this.$message.success("修改成功");
+                            }else this.$message.error("修改异常");
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '取消输入'
+                        });
+                    });
+                },
+                deleteUser(){
+                    this.$prompt('请输入账户密码', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputValidator: (val) => {
+                            const md5Password = hex_md5(val + this.formData.account);
+                            if (md5Password === this.formData.password) {
+                                return true;
+                            }
+                            return false;
+                        },
+                        inputErrorMessage: '密码不正确',
+                    }).then(({ value }) => {
+                        axios.delete("http://localhost:8080/user/delete/" + this.formData.id).then((res)=>{
+                            if(res.data.flag) {
+                                alert("删除成功");
+                                window.location.href = "signIn.html?";
+                            }else{
+                                this.$message.error("删除异常！");
+                            }
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '取消'
+                        });
+                    });
                 }
+
             }
         });
     </script>
