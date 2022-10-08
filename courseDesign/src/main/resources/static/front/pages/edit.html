@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+    <div id="app">
+        <el-container>
+            <el-header>
+                <el-row>
+                    <el-col :span="16" :offset="2">
+                        <div>
+                            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                                <el-menu-item index="1">首页</el-menu-item>
+                                <el-menu-item index="2">个人中心</el-menu-item>
+                                <el-menu-item index="3" :disabled="activeDisabled">审核管理</el-menu-item>
+                                <el-menu-item index="4">新文章</el-menu-item>
+                            </el-menu>
+                        </div>
+                    </el-col>
+                    <el-col :span="4" :offset="2">
+                        <el-button type="danger" icon="el-icon-switch-button" @click="quit">退出登录</el-button>
+                    </el-col>
+                </el-row>
+
+            </el-header>
+            <el-main>
+                <el-row>
+                    <el-col :span="10">
+                        <el-input v-model="textData.title" placeholder="请输入标题"></el-input>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <div>
+                            <el-input
+                                    type="textarea"
+                                    :rows="20"
+                                    placeholder="请输入内容"
+                                    v-model="textData.article">
+                            </el-input>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="4" :offset="10">
+                        <el-button type="success" icon="el-icon-upload" @click="submit">提交</el-button>
+                    </el-col>
+                </el-row>
+
+            </el-main>
+        </el-container>
+    </div>
+    <script src="../js/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../js/md5.js"></script>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            activeIndex: '4',       //导航栏默认选中从左往右第一个
+            activeDisabled: true,  //是否开启审核禁用
+            isUpdate: false,
+
+            formData: {
+                id: '',
+                name: 'admin',
+                headImage: '',
+                account: '',
+                password: '',
+                is_admin: true,
+                description: '文本文本',
+            },
+
+            textData: {
+                id: '',
+                title: '',
+                article: '',
+                img: '',
+            }
+        },
+        created() {
+            if(this.formData.is_admin){
+                this.activeDisabled = false;
+            }else this.activeDisabled = true;
+            this.init();
+        },
+        methods: {
+            init(){
+                var account = (window.location.search).substring(1);//截取url中的一部分
+                axios.get("http://localhost:8080/user/account?account="+account).then((res)=>{
+                    const json = JSON.stringify(res.data.data);//格式化Json数据
+                    const r = eval('(' + json + ')');//转json字符串
+                    if(res.data.flag) {
+                        this.formData.account = account;
+                        this.formData.name = r.name;
+                        this.formData.password = r.password;
+                        this.formData.id = r.id;
+                        this.formData.headImage = r.headImage;
+                        this.textData.id = r.id;
+                        this.textData.img = "/common/download?name=" + r.headImage;
+                    }else{
+                        // console.log(account);
+                        this.$message.error("异常！");
+                    }
+                })//以账号查询
+            },
+            handleSelect(key, keyPath) {
+                switch(key){
+                    case '1':
+                        window.location.href = "main.html?" + this.formData.account;
+                        break;
+                    case '2':
+                        window.location.href = "user.html?" + this.formData.account;
+                        break;
+                    case '3':
+                        window.location.href = "check.html?" + this.formData.account;
+                        break;
+                    case '4':
+                        window.location.href = "edit.html?" + this.formData.account;
+                        break;
+                }
+            },
+            quit(){
+                window.location.href = "signIn.html?";
+            },
+            submit(){
+                //console.log(this.textarea);
+                if(this.textData.article==='' || this.textData.title===''){
+                    alert("内容或标题不能为空！");
+                }else{
+                    if(!this.isUpdate){
+                        axios.post("http://localhost:8080/essay/save",this.textData).then((res)=>{
+                            if(res.data.flag){
+                                this.$message.success("提交成功！");
+                            }else this.$message.error("提交异常！");
+                        })
+                    }else{
+                        axios.put("http://localhost:8080/essay/update",this.textData).then((res)=>{
+                            if(res.data.flag){
+                                this.$message.success("修改成功！");
+                            }else this.$message.error("修改异常！");
+                        })
+                    }
+
+                }
+            },
+        }
+    });
+</script>
+</body>
+</html>

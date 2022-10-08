@@ -24,6 +24,8 @@ public class Essay {
 
     private Integer praise;
 
+    private String img;
+
     private boolean isVisible;
 
     private boolean isChecked;

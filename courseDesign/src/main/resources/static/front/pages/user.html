@@ -21,6 +21,7 @@
                                 <el-menu-item index="1">首页</el-menu-item>
                                 <el-menu-item index="2">个人中心</el-menu-item>
                                 <el-menu-item index="3" :disabled="activeDisabled">审核管理</el-menu-item>
+                                <el-menu-item index="4">新文章</el-menu-item>
                             </el-menu>
                         </div>
                     </el-col>
@@ -188,17 +189,6 @@
                             this.formData.id = r.id;
                             this.formData.headImage = "/common/download?name=" + r.headImage;
 
-                            // console.log(json);
-                            // axios.get("http://localhost:8080/essay/get/"+this.formData.id).then((res1)=>{
-                            //     const json_1 = JSON.stringify(res1.data.data);//格式化Json数据
-                            //     const r1 = eval('(' + json_1 + ')');//转json字符串
-                            //     if(res1.data.flag) {
-                            //         this.tableForm = r1;
-                            //     }else{
-                            //         this.$message.error("信息异常！");
-                            //     }
-                            // })//查询所有交易记录
-
                             this.$message.success("登录成功！");
                         }else{
                             // console.log(account);
@@ -216,6 +206,9 @@
                             break;
                         case '3':
                             window.location.href = "check.html?" + this.formData.account;
+                            break;
+                        case '4':
+                            window.location.href = "edit.html?" + this.formData.account;
                             break;
                     }
                 },

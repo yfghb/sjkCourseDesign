@@ -19,11 +19,12 @@
                                 <el-menu-item index="1">首页</el-menu-item>
                                 <el-menu-item index="2">个人中心</el-menu-item>
                                 <el-menu-item index="3" :disabled="activeDisabled">审核管理</el-menu-item>
+                                <el-menu-item index="4">新文章</el-menu-item>
                             </el-menu>
                         </div>
                     </el-col>
                     <el-col :span="4" :offset="2">
-                        <el-button type="danger" icon="el-icon-switch-button">退出登录</el-button>
+                        <el-button type="danger" icon="el-icon-switch-button" @click="quit">退出登录</el-button>
                     </el-col>
                 </el-row>
             </el-header>
@@ -45,7 +46,7 @@
 <!-- 搜索栏 -->         
 
 <!-- 信息栏 -->
-                <el-row v-for="item in itemList" :key="item.id">
+                <el-row v-for="(item,essayId) in itemList" :key="item.essayId">
                     <el-col :span="16" :offset="4">
                         <el-card shadow="hover">
                             <el-row>
@@ -55,7 +56,9 @@
                                     </el-image>           
                                 </el-col>
                                 <el-col :span="18" :offset="2">
-                                    {{ item.title }}
+                                    <el-button @click="articleInit(essayId)" type="text" style="margin-left: 16px;">
+                                        {{ item.title }}
+                                    </el-button>
                                 </el-col>
                             </el-row>  
                             <el-row>
@@ -69,8 +72,29 @@
                         </el-card>
                       </el-col>
                 </el-row>
+                <el-pagination
+                        class="pageList"
+                        :page-sizes="[8, 16, 24]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="counts"
+                        @size-change="handleSizeChange"
+                        :current-page.sync="page"
+                        @current-change="handleCurrentChange"
+                ></el-pagination>
 <!-- 信息栏 -->
+
             </el-main>
+            <el-drawer
+                    title="标题"
+                    size="45%"
+                    :visible.sync="drawer"
+                    :direction="direction"
+                    :with-header="false"
+                    :before-close="drawerClose">
+                <h2 style="text-align: center;">{{ textData.title }}</h2>
+                <textarea disabled='true' style="width: 100%; height: 600px; font-size: 18px">{{ textData.article }}</textarea>
+            </el-drawer>
         </el-container>
 
     </div>
@@ -86,20 +110,46 @@
                 search: '',             //搜索框文本数据
                 activeIndex: '1',       //导航栏默认选中从左往右第一个
                 activeDisabled: false,  //是否开启审核禁用
+                drawer: false,          //文章框是否可见
+                direction: 'rtl',
+                counts: 0,
+                page: 1,
+                pageSize: 8,
 
                 formData: {
+                    id: '',
                     title: '',
+                    name: 'admin',
+                    headImage: '',
                     account: '',
+                    password: '',
                     is_admin: true,
+                    description: '文本文本',
                 },
-                itemList: [
-                    {id: 1, img: '../images/sakana.png', title: 'sa~ka~na', praise: 12344},
-                    {id: 2, img: '../images/chinanago.png',title: 'chi~na~na~go', praise: 66666},
-                    {id: 3, img: '', text: '', praise: 114514},
-                    {id: 4, img: '', text: '', praise: 114514},
-                    {id: 5, img: '', text: '', praise: 114514},
-                    {id: 6, img: '', text: '', praise: 114514},
-                ]
+                textData: {
+                    essayId: '',
+                    title: '标题xx',
+                    article: 'Dear Dolores\n' +
+                        '\n' +
+                        'When i think of you，I\'m reminded of the beautiful plains of Iowa.The distance between us is breaking my spirit.\n' +
+                        '\n' +
+                        'My time and experiences without you are meaningless to me.Falling in love with you was the easiest thing i have ever done.Nothing matters but you.I am the luckiest man alive，and every moment i am without you，i realize this.\n' +
+                        '\n' +
+                        'I love you the day i met you，i love you today，and i will love you to rest of my life.\n' +
+                        '\n' +
+                        'p.s. kiss my kids.\n' +
+                        '\n' +
+                        '亲爱的德洛丽丝\n' +
+                        '\n' +
+                        '当我想到你我就想起爱荷华州美丽的平原，我们之间的距离让我魂牵梦绕。\n' +
+                        '\n' +
+                        '没有你我的时间和经历都毫无意义。与你相爱是我做过最轻松的事。对我来说，你最重要。我是这个世界上最幸运的男人，我活着的每一天都将它铭记于心。\n' +
+                        '\n' +
+                        '遇见你的那天我就爱上了你，今天我也爱你，余生我也都会一样爱你。\n' +
+                        '\n' +
+                        '附上.亲亲我的孩子们.\n',
+                },
+                itemList: [{essayId: 12,title:'测试',praise:666}],
             },
             created() {
                 if(this.formData.is_admin){
@@ -110,8 +160,49 @@
             methods: {
                 init(){
                     const act = (window.location.search).substring(1);//截取url中的一部分
-                    this.formData.account = act;
-                    //console.log(this.formData.account);
+                    axios.get("http://localhost:8080/user/account?account="+act).then((res)=>{
+                        const json = JSON.stringify(res.data.data);//格式化Json数据
+                        const r = eval('(' + json + ')');//转json字符串
+                        if(res.data.flag) {
+                            this.formData.account = act;
+                            this.formData.name = r.name;
+                            this.formData.password = r.password;
+                            this.formData.id = r.id;
+                            this.formData.headImage = r.headImage;
+                        }else{
+                            // console.log(account);
+                            this.$message.error("异常！");
+                        }
+                    });//以账号查询
+                    axios.get("http://localhost:8080/essay/page?page="+this.page+"&pageSize="+this.pageSize).then((res)=>{
+                        if(res.data.flag) {
+                            this.itemList = res.data.data.records;
+                            this.pageSize = res.data.data.size;
+                            this.page = res.data.data.current;
+                            this.counts = res.data.data.total;
+                            // console.log(this.itemList);
+                        }else{
+                            // console.log(account);
+                            this.$message.error("异常！");
+                        }
+                    });
+                },
+                articleInit(index){
+                    this.drawer = true;
+                    var id = this.itemList[index].essayId;
+                    //console.log(id);
+                    axios.get("http://localhost:8080/essay/get?id="+id).then((res)=>{
+                       if(res.data.flag){
+                           const json = JSON.stringify(res.data.data);//格式化Json数据
+                           const r = eval('(' + json + ')');//转json字符串
+                           this.textData.essayId = r.essayId;
+                           this.textData.title = r.title;
+                           this.textData.article = r.article;
+                       } else {
+                         this.textData.article = "找不到文章内容";
+                         this.textData.title = "出错了！";
+                       }
+                    });
                 },
                 handleSelect(key, keyPath) {
                     switch(key){
@@ -121,8 +212,32 @@
                         case '2':
                             window.location.href = "user.html?" + this.formData.account;
                             break;
+                        case '3':
+                            window.location.href = "check.html?" + this.formData.account;
+                            break;
+                        case '4':
+                            window.location.href = "edit.html?" + this.formData.account;
+                            break;
                     }
-                }
+                },
+                handleSizeChange (val) {
+                    this.pageSize = val
+                    this.init()
+                },
+                handleCurrentChange (val) {
+                    this.page = val
+                    this.init()
+                },
+                drawerClose(done) {
+                    this.$confirm('确认关闭？')
+                        .then(_ => {
+                            done();
+                        })
+                        .catch(_ => {});
+                },
+                quit(){
+                    window.location.href = "signIn.html?";
+                },
             }
         });
     </script>

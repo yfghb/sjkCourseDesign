@@ -21,7 +21,7 @@ public class EssayController {
      * @param essay 传入一个Essay实体
      * @return boolean
      */
-    @PostMapping("/create")
+    @PostMapping("/save")
     public R save(@RequestBody Essay essay) {
         return new R(essayService.save(essay));
     }
@@ -51,5 +51,25 @@ public class EssayController {
         lqw.orderByAsc(Essay::getCreateTime);
         essayService.page(pageInfo,lqw);
         return new R(true,pageInfo);
+    }
+
+    /**
+     * 以id获取文章内容
+     * @param id 传入一个int值id
+     * @return R(Essay)实体
+     */
+    @GetMapping("/get")
+    public R getOne(Integer id){
+        return new R(true,essayService.getById(id));
+    }
+
+    /**
+     * 修改文章
+     * @param essay 传入一个Essay实体
+     * @return boolean
+     */
+    @PutMapping("/update")
+    public R update(@RequestBody Essay essay){
+        return new R(true,essayService.updateById(essay));
     }
 }
