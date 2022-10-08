@@ -9,6 +9,8 @@ import com.coursedesign.service.EssayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/essay")
 public class EssayController {
@@ -44,10 +46,16 @@ public class EssayController {
      * @return 文章列表
      */
     @GetMapping("/page")
-    public R getLikeName(int page,int pageSize,String name) {
+    public R getLikeName(int page,int pageSize,String name,Integer id) {
         Page pageInfo = new Page<>(page,pageSize);
         LambdaQueryWrapper<Essay> lqw = new LambdaQueryWrapper<>();
-        lqw.like(name!=null,Essay::getTitle,name);
+        if(Objects.equals(name, "check")){
+            lqw.eq(Essay::getCheckId, id);
+            lqw.eq(Essay::getIsChecked,false);
+        }else{
+            lqw.eq(Essay::getIsVisible,true);
+            lqw.like(name!=null,Essay::getTitle,name);
+        }
         lqw.orderByAsc(Essay::getCreateTime);
         essayService.page(pageInfo,lqw);
         return new R(true,pageInfo);
@@ -71,5 +79,15 @@ public class EssayController {
     @PutMapping("/update")
     public R update(@RequestBody Essay essay){
         return new R(true,essayService.updateById(essay));
+    }
+
+    /**
+     * 以id批量修改文章可见性
+     * @param id 传入一个int值id
+     * @return boolean
+     */
+    @PutMapping("/update/id")
+    public R updateById(Integer id){
+        return new R(essayService.updateStatus(id));
     }
 }

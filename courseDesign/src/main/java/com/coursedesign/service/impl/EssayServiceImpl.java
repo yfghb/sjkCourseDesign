@@ -12,4 +12,9 @@ public class EssayServiceImpl extends ServiceImpl<EssayDao, Essay> implements Es
 
     @Autowired
     private EssayDao essayDao;
+
+    @Override
+    public Boolean updateStatus(Integer id) {
+        return essayDao.updateStatus(id);
+    }
 }

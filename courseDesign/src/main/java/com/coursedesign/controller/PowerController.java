@@ -13,24 +13,15 @@ public class PowerController {
     @Autowired
     private PowerService powerService;
 
-    /**
-     * 以id查询
-     * @param id 传入一个int值id
-     * @return Power实体
-     */
-    @GetMapping
-    public R getById(Integer id){
-        return new R(true,powerService.getById(id));
-    }
 
     /**
      * 更新power
-     * @param power 传入一个Power实体
+     * @param account 传入一个String值account
      * @return boolean
      */
-    @PutMapping
-    public R update(@RequestBody Power power){
-        return new R(powerService.updateById(power));
+    @PutMapping("/account")
+    public R update(String account){
+        return new R(powerService.updateStatusByAct(account));
     }
 
     /**

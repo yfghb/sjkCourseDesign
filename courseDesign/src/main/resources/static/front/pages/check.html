@@ -3,25 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <title>审核</title>
+
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-    <div id="app">
-        {{ message }}
-    </div>
+<div id="app">
+    <el-container>
+        <!-- 导航栏 -->
+        <el-header>
+            <el-row>
+                <el-col :span="16" :offset="2">
+                    <div>
+                        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                            <el-menu-item index="1">首页</el-menu-item>
+                            <el-menu-item index="2">个人中心</el-menu-item>
+                            <el-menu-item index="3" :disabled="activeDisabled">审核管理</el-menu-item>
+                            <el-menu-item index="4">新文章</el-menu-item>
+                        </el-menu>
+                    </div>
+                </el-col>
+                <el-col :span="4" :offset="2">
+                    <el-button type="danger" icon="el-icon-switch-button" @click="quit">退出登录</el-button>
+                </el-col>
+            </el-row>
+        </el-header>
+        <!-- 导航栏 -->
+        <el-main>
+            <!-- 搜索栏 -->
+            <el-row>
+                <el-col :span="10" :offset="6">
+                    <div>
+                        <el-input v-model="search" placeholder="请输入内容"></el-input>
+                    </div>
+                </el-col>
+                <el-col :span="2" >
+                    <div>
+                        <el-button type="primary" icon="el-icon-search">搜索</el-button>
+                    </div>
+                </el-col>
+            </el-row>
+            <!-- 搜索栏 -->
 
-    <script src="../js/vue.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="../js/axios-0.18.0.js"></script>
-    <script src="../js/md5.js"></script>
-    <script>
-        const vm = new Vue({
-            el: '#app',
-            data: {
-                message:"hi! Vue.",
-            }
-        });
-    </script>
+            <!-- 信息栏 -->
+            <el-row v-for="(item,essayId) in itemList" :key="item.essayId">
+                <el-col :span="16" :offset="4">
+                    <el-card shadow="hover">
+                        <el-row>
+                            <el-col :span="3">
+                                <el-image   style="width: 100px; height: 100px"
+                                            :src="item.img">
+                                </el-image>
+                            </el-col>
+                            <el-col :span="18" :offset="2">
+                                <el-button @click="articleInit(essayId)" type="text" style="margin-left: 16px;">
+                                    {{ item.title }}
+                                </el-button>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="3">
+                                <div class="bottom clearfix" >
+                                    <el-button type="danger" @click="banUser(essayId)">封禁该用户</el-button>
+                                </div>
+                            </el-col>
+                            <el-col :span="6" :offset="18">
+                                <div class="bottom clearfix" >
+                                    <el-button type="success" @click="pass(essayId)">通过</el-button>
+                                    <el-button type="warning" @click="notPass(essayId)">不通过</el-button>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-card>
+                </el-col>
+            </el-row>
+            <el-pagination
+                    class="pageList"
+                    :page-sizes="[4,8,16]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="counts"
+                    @size-change="handleSizeChange"
+                    :current-page.sync="page"
+                    @current-change="handleCurrentChange"
+            ></el-pagination>
+            <!-- 信息栏 -->
+
+        </el-main>
+        <el-drawer
+                title="标题"
+                size="45%"
+                :visible.sync="drawer"
+                :direction="direction"
+                :with-header="false">
+            <h2 style="text-align: center;">{{ textData.title }}</h2>
+            <textarea disabled='true' style="width: 100%; height: 600px; font-size: 18px">{{ textData.article }}</textarea>
+        </el-drawer>
+    </el-container>
+
+</div>
+
+<script src="../js/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script src="../js/md5.js"></script>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            search: '',             //搜索框文本数据
+            activeIndex: '3',       //导航栏默认选中从左往右第一个
+            activeDisabled: false,  //是否开启审核禁用
+            drawer: false,          //文章框是否可见
+            direction: 'rtl',
+            counts: 0,
+            page: 1,
+            pageSize: 4,
+
+            formData: {
+                id: '',
+                title: '',
+                name: 'admin',
+                headImage: '',
+                account: '',
+                password: '',
+                is_admin: true,
+                description: '文本文本',
+            },
+            power: {
+                account:'',
+                isDisabled: '',
+            },
+            textData: {
+                essayId: '',
+                title: '标题xx',
+                article: 'Dear Dolores\n' +
+                    '\n' +
+                    'When i think of you，I\'m reminded of the beautiful plains of Iowa.The distance between us is breaking my spirit.\n' +
+                    '\n' +
+                    'My time and experiences without you are meaningless to me.Falling in love with you was the easiest thing i have ever done.Nothing matters but you.I am the luckiest man alive，and every moment i am without you，i realize this.\n' +
+                    '\n' +
+                    'I love you the day i met you，i love you today，and i will love you to rest of my life.\n' +
+                    '\n' +
+                    'p.s. kiss my kids.\n' +
+                    '\n' +
+                    '亲爱的德洛丽丝\n' +
+                    '\n' +
+                    '当我想到你我就想起爱荷华州美丽的平原，我们之间的距离让我魂牵梦绕。\n' +
+                    '\n' +
+                    '没有你我的时间和经历都毫无意义。与你相爱是我做过最轻松的事。对我来说，你最重要。我是这个世界上最幸运的男人，我活着的每一天都将它铭记于心。\n' +
+                    '\n' +
+                    '遇见你的那天我就爱上了你，今天我也爱你，余生我也都会一样爱你。\n' +
+                    '\n' +
+                    '附上.亲亲我的孩子们.\n',
+                isVisible: '',
+                img: '',
+            },
+            itemList: [{id:'66',essayId: 12,title:'测试',praise:666}],
+        },
+        created() {
+            this.init();
+        },
+        methods: {
+            init(){
+                const act = (window.location.search).substring(1);//截取url中的一部分
+                axios.get("http://localhost:8080/user/account?account="+act).then((res)=>{
+                    const json = JSON.stringify(res.data.data);//格式化Json数据
+                    const r = eval('(' + json + ')');//转json字符串
+                    if(res.data.flag) {
+                        this.formData.account = act;
+                        this.formData.name = r.name;
+                        this.formData.password = r.password;
+                        this.formData.id = r.id;
+                        this.formData.headImage = r.headImage;
+                        axios.get("http://localhost:8080/essay/page?page="+this.page+"&pageSize="+this.pageSize+"&name=check"+"&id="+r.id).then((res1)=>{
+                            if(res1.data.flag) {
+                                this.itemList = res1.data.data.records;
+                                this.pageSize = res1.data.data.size;
+                                this.page = res1.data.data.current;
+                                this.counts = res1.data.data.total;
+                                // console.log(this.itemList);
+                            }else{
+                                // console.log(account);
+                                this.$message.error("异常！");
+                            }
+                        });
+                    }else{
+                        // console.log(account);
+                        this.$message.error("异常！");
+                    }
+                });//以账号查询
+
+            },
+            articleInit(index){
+                this.drawer = true;
+                var id = this.itemList[index].essayId;
+                //console.log(id);
+                axios.get("http://localhost:8080/essay/get?id="+id).then((res)=>{
+                    if(res.data.flag){
+                        const json = JSON.stringify(res.data.data);//格式化Json数据
+                        const r = eval('(' + json + ')');//转json字符串
+                        this.textData.essayId = r.essayId;
+                        this.textData.title = r.title;
+                        this.textData.article = r.article;
+                    } else {
+                        this.textData.article = "找不到文章内容";
+                        this.textData.title = "出错了！";
+                    }
+                });
+            },
+            handleSelect(key, keyPath) {
+                switch(key){
+                    case '1':
+                        window.location.href = "main.html?" + this.formData.account;
+                        break;
+                    case '2':
+                        window.location.href = "user.html?" + this.formData.account;
+                        break;
+                    case '3':
+                        window.location.href = "check.html?" + this.formData.account;
+                        break;
+                    case '4':
+                        window.location.href = "edit.html?" + this.formData.account;
+                        break;
+                }
+            },
+            handleSizeChange (val) {
+                this.pageSize = val
+                this.init()
+            },
+            handleCurrentChange (val) {
+                this.page = val
+                this.init()
+            },
+            pass(index){
+                var id = this.itemList[index].essayId;
+                axios.get("http://localhost:8080/essay/get?id="+id).then((res)=>{
+                    if(res.data.flag){
+                        const json = JSON.stringify(res.data.data);//格式化Json数据
+                        const r = eval('(' + json + ')');//转json字符串
+                        this.textData.essayId = r.essayId;
+                        this.textData.title = r.title;
+                        this.textData.article = r.article;
+                        this.textData.img = r.img;
+                        this.textData.isVisible = true;
+                        this.textData.isChecked = true;
+                        axios.put("http://localhost:8080/essay/update",this.textData).then((res2)=>{
+                            if(res2.data.flag){
+                                this.$message.success("已通过文章："+this.textData.title);
+                            } else this.$message.error("异常！");
+                        });
+                    } else {
+                        this.$message.error("出错了！");
+                    }
+                });
+                this.init();
+            },
+            notPass(index){
+                var id = this.itemList[index].essayId;
+                axios.get("http://localhost:8080/essay/get?id="+id).then((res)=>{
+                    if(res.data.flag){
+                        const json = JSON.stringify(res.data.data);//格式化Json数据
+                        const r = eval('(' + json + ')');//转json字符串
+                        this.textData.essayId = r.essayId;
+                        this.textData.title = r.title;
+                        this.textData.article = r.article;
+                        this.textData.img = r.img;
+                        this.textData.isVisible = false;
+                        this.textData.isChecked = true;
+                        axios.put("http://localhost:8080/essay/update",this.textData).then((res2)=>{
+                            if(res2.data.flag){
+                                this.$message.info("已改变文章："+this.textData.title+"的可见性");
+                            } else this.$message.error("异常！");
+                        });
+                    } else {
+                        this.$message.error("出错了！");
+                    }
+                });
+                this.init();
+            },
+            banUser(index){
+                var id = this.itemList[index].id;
+                //console.log(id);
+                axios.put("http://localhost:8080/essay/update/id?id="+id).then((res)=>{
+                   if(res.data.flag===false){
+                       this.$message.error("异常！");
+                   }
+                });
+                axios.get("http://localhost:8080/user/get/id?id="+id).then((res)=>{
+                    const json = JSON.stringify(res.data.data);//格式化Json数据
+                    const r = eval('(' + json + ')');//转json字符串
+                    if(res.data.flag){
+                        axios.put("http://localhost:8080/power/account?account="+r.account).then((res2)=>{
+                            if(res2.data.flag){
+                                this.$message.success("已禁用用户");
+                            }else this.$message.error("异常！！！");
+                        });
+                    }else this.$message.error("异常！!")
+                });
+                this.init();
+            },
+            quit(){
+                window.location.href = "signIn.html?";
+            },
+        }
+    });
+</script>
 </body>
+
 </html>

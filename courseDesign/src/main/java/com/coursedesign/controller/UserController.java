@@ -55,6 +55,15 @@ public class UserController {
         return new R(true,userService.getByAccount(account));
     }
 
+    /**
+     * 以id查询用户信息
+     * @param id 传入一个int类型值id
+     * @return User实体
+     */
+    @GetMapping("/get/id")
+    public R getById(Integer id){
+        return new R(true,userService.getById(id));
+    }
 
 
 }

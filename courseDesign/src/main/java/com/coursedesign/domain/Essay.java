@@ -29,6 +29,13 @@ public class Essay {
     private boolean isVisible;
 
     private boolean isChecked;
+
+    public boolean getIsVisible() {
+        return this.isVisible;
+    }
+    public boolean getIsChecked() {
+        return this.isChecked;
+    }
 }
 
 

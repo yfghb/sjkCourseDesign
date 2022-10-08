@@ -74,7 +74,7 @@
                 </el-row>
                 <el-pagination
                         class="pageList"
-                        :page-sizes="[8, 16, 24]"
+                        :page-sizes="[4,8,16]"
                         :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="counts"
@@ -114,7 +114,7 @@
                 direction: 'rtl',
                 counts: 0,
                 page: 1,
-                pageSize: 8,
+                pageSize: 4,
 
                 formData: {
                     id: '',

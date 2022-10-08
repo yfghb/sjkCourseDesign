@@ -13,4 +13,9 @@ public class PowerServiceImpl extends ServiceImpl<PowerDao, Power> implements Po
 
     @Autowired
     private PowerDao powerDao;
+
+    @Override
+    public Boolean updateStatusByAct(String account) {
+        return powerDao.updateStatusByAccount(account);
+    }
 }
