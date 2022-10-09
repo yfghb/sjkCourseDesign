@@ -1,5 +1,6 @@
 package com.coursedesign.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.coursedesign.controller.utils.R;
 import com.coursedesign.domain.Power;
 import com.coursedesign.service.PowerService;
@@ -32,5 +33,17 @@ public class PowerController {
     @PostMapping
     public R save(@RequestBody Power power){
         return new R(powerService.save(power));
+    }
+
+    /**
+     * 以账号查询power表
+     * @param account 传入一个String值power
+     * @return Power实体
+     */
+    @GetMapping("/account")
+    public R getByAccount(String account){
+        LambdaQueryWrapper<Power> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Power::getAccount,account);
+        return new R(true,powerService.getOne(lqw));
     }
 }

@@ -188,12 +188,26 @@
                             this.formData.password = r.password;
                             this.formData.id = r.id;
                             this.formData.headImage = "/common/download?name=" + r.headImage;
-
+                            axios.get("http://localhost:8080/essay/page?page=1&pageSize=1000&name=passed&id="+r.id).then((res1)=>{
+                                if(res1.data.flag) {
+                                    this.passedArticle = res1.data.data.records.length;
+                                }else{
+                                    this.$message.error("异常！");
+                                }
+                            });
+                            axios.get("http://localhost:8080/essay/page?page=1&pageSize=1000&name=notPass&id="+r.id).then((res2)=>{
+                                if(res2.data.flag) {
+                                    this.checkingArticle = res2.data.data.records.length;
+                                }else{
+                                    this.$message.error("异常！");
+                                }
+                            });
                         }else{
                             // console.log(account);
                             this.$message.error("异常！");
                         }
                     })//以账号查询
+
                 },
                 handleSelect(key, keyPath) {
                     switch(key){

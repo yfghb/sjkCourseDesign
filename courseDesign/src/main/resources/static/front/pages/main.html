@@ -100,7 +100,7 @@
                     </el-col>
                 </el-row>
 
-                <el-row v-for="(comment,commentId) in commentList">
+                <el-row v-for="(comment,commentId) in commentList" :key="commentId">
                     <el-card shadow="hover" style="margin-top: 20px;">
                         <el-row>
                             <el-col :span="3">
@@ -133,8 +133,7 @@
             <el-dialog
                     title="新评论"
                     :visible.sync="newCommentVisible"
-                    width="30%"
-                    :before-close="handleClose">
+                    width="30%">
                 <span>
                     <el-row>
                         <el-col :span="24">
@@ -185,7 +184,7 @@
                     headImage: '',
                     account: '',
                     password: '',
-                    is_admin: true,
+                    is_admin: false,
                     description: '文本文本',
                 },
                 newComment: {
@@ -220,7 +219,7 @@
                     isVisible: '',
                     isChecked: '',
                 },
-                itemList: [{essayId: 12, title:'测试',praise:666}],
+                itemList: [],
                 commentList: [
                     {essayId: 1, createTime:'2022-10-9', name:'zhangSan', commentId: 1, headImage: '', commentText: '没有你我的时间和经历都毫无意义。与你相爱是我做过最轻松的事。对我来说，你最重要。遇见你的那天我就爱上了你，今天我也爱你，余生我也都会一样爱你', praise:1},
                     {essayId: 2, createTime:'2022-10-9', name:'liSi', commentId: 2, headImage: '', commentText: '我是评论2', praise:2},
@@ -230,13 +229,6 @@
                 ]
             },
             created() {
-                if(this.formData.is_admin){
-                    this.activeDisabled = false;
-                    this.delCommentBtnVisible = true
-                }else{
-                    this.activeDisabled = true;
-                    this.delCommentBtnVisible = false;
-                }
                 this.init();
             },
             methods: {
@@ -246,6 +238,8 @@
                     var type = null;
                     if(param.length>1)type = param[1];
 
+                    this.activeDisabled = true;
+                    this.delCommentBtnVisible = false;
                     axios.get("http://localhost:8080/user/account?account="+act).then((res)=>{
                         const json = JSON.stringify(res.data.data);//格式化Json数据
                         const r = eval('(' + json + ')');//转json字符串
@@ -269,13 +263,29 @@
                                     this.$message.error("异常！");
                                 }
                             });
+                            axios.get("http://localhost:8080/power/account?account="+ r.account).then((res2)=>{
+                                if (res2.data.flag){
+                                    const json = JSON.stringify(res2.data.data);//格式化Json数据
+                                    const r1 = eval('(' + json + ')');//转json字符串
+                                    if(r1.admin){
+                                        this.formData.is_admin = true;
+                                        this.activeDisabled = false;
+                                        this.delCommentBtnVisible = true
+                                    }
+                                    if(r1.disabled===true){
+                                        alert("您已被封禁！");
+                                        window.location.href = "signIn.html?";
+                                    }
+                                }else this.$message.error("权限查询异常！");
+                            });
 
                         }else{
                             // console.log(account);
                             this.$message.error("异常！");
                         }
-                    });//以账号查询
-
+                    });
+                    console.log(this.activeDisabled);
+                    console.log(this.delCommentBtnVisible);
                 },
                 articleInit(index){
                     this.drawer = true;
@@ -293,7 +303,7 @@
                            this.textData.praise = r.praise;
                            this.textData.isVisible = r.isVisible;
                            this.textData.isChecked = r.isChecked;
-                           this.newComment.headImage = r.img;
+                           this.newComment.headImage = "/common/download?name=" + this.formData.headImage;
                        } else {
                          this.textData.article = "找不到文章内容";
                          this.textData.title = "出错了！";
