@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coursedesign.controller.utils.R;
 import com.coursedesign.domain.Essay;
 import com.coursedesign.service.EssayService;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,13 +50,32 @@ public class EssayController {
     public R getLikeName(int page,int pageSize,String name,Integer id) {
         Page pageInfo = new Page<>(page,pageSize);
         LambdaQueryWrapper<Essay> lqw = new LambdaQueryWrapper<>();
-        if(Objects.equals(name, "check")){
-            lqw.eq(Essay::getCheckId, id);
-            lqw.eq(Essay::getIsChecked,false);
-        }else{
-            lqw.eq(Essay::getIsVisible,true);
-            lqw.like(name!=null,Essay::getTitle,name);
+
+        switch (name){
+            case "all":
+                lqw.eq(Essay::getId, id);
+                break;
+            case "passed":
+                lqw.eq(Essay::getIsVisible,true);
+                lqw.eq(Essay::getId, id);
+                break;
+            case "notPass":
+                lqw.eq(Essay::getIsVisible,false);
+                lqw.eq(Essay::getIsChecked,true);
+                lqw.eq(Essay::getId, id);
+                break;
+            case "check":
+                lqw.eq(Essay::getCheckId, id);
+                lqw.eq(Essay::getIsChecked,false);
+                break;
+            case "null":
+                lqw.eq(Essay::getIsVisible,true);
+                break;
+            default:
+                lqw.eq(Essay::getIsVisible,true);
+                lqw.like(Strings.isNotEmpty(name),Essay::getTitle,name);
         }
+
         lqw.orderByAsc(Essay::getCreateTime);
         essayService.page(pageInfo,lqw);
         return new R(true,pageInfo);

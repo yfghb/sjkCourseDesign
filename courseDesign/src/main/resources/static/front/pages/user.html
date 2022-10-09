@@ -90,7 +90,7 @@
                                 </el-option>
                             </el-select>
                         </template>
-                        <el-button type="primary">查看</el-button>
+                        <el-button type="primary" @click="jumpInto">查看</el-button>
                     </el-col>
 
                 </el-row>
@@ -145,7 +145,7 @@
                     title: '',
                     name: 'admin',
                     headImage: '',
-                    account: '',
+                    account: '123456',
                     password: '',
                     is_admin: true,
                     description: '文本文本',
@@ -214,6 +214,23 @@
                 },
                 quit(){
                     window.location.href = "signIn.html?";
+                },
+                jumpInto(){
+                    alert(this.selectValue)
+                    switch (this.selectValue){
+                        case "所有文章":
+                            window.location.href = "main.html?" + this.formData.account + "&all";
+                            break;
+                        case "选项2":
+                            window.location.href = "main.html?" + this.formData.account + "&passed";
+                            break;
+                        case "选项3":
+                            window.location.href = "main.html?" + this.formData.account + "&notPass";
+                            break;
+                        case "选项4":
+                            window.location.href = "check.html?" + this.formData.account + "&check";
+                            break;
+                    }
                 },
                 updateUserPwd() {
                     if(this.identify){

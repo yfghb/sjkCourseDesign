@@ -159,7 +159,11 @@
             },
             methods: {
                 init(){
-                    const act = (window.location.search).substring(1);//截取url中的一部分
+                    const param = (window.location.search).substring(1).split('&');
+                    const act = param[0];
+                    var type = null;
+                    if(param.length>1)type = param[1];
+                    console.log(type);
                     axios.get("http://localhost:8080/user/account?account="+act).then((res)=>{
                         const json = JSON.stringify(res.data.data);//格式化Json数据
                         const r = eval('(' + json + ')');//转json字符串
@@ -169,23 +173,26 @@
                             this.formData.password = r.password;
                             this.formData.id = r.id;
                             this.formData.headImage = r.headImage;
+                            console.log( this.formData.id);
+                            axios.get("http://localhost:8080/essay/page?page="+this.page+"&pageSize="+this.pageSize+"&name="+type+"&id="+r.id).then((res1)=>{
+                                if(res1.data.flag) {
+                                    this.itemList = res1.data.data.records;
+                                    this.pageSize = res1.data.data.size;
+                                    this.page = res1.data.data.current;
+                                    this.counts = res1.data.data.total;
+                                    // console.log(this.itemList);
+                                }else{
+                                    // console.log(account);
+                                    this.$message.error("异常！");
+                                }
+                            });
+
                         }else{
                             // console.log(account);
                             this.$message.error("异常！");
                         }
                     });//以账号查询
-                    axios.get("http://localhost:8080/essay/page?page="+this.page+"&pageSize="+this.pageSize).then((res)=>{
-                        if(res.data.flag) {
-                            this.itemList = res.data.data.records;
-                            this.pageSize = res.data.data.size;
-                            this.page = res.data.data.current;
-                            this.counts = res.data.data.total;
-                            // console.log(this.itemList);
-                        }else{
-                            // console.log(account);
-                            this.$message.error("异常！");
-                        }
-                    });
+
                 },
                 articleInit(index){
                     this.drawer = true;

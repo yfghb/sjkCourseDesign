@@ -166,7 +166,8 @@
         },
         methods: {
             init(){
-                const act = (window.location.search).substring(1);//截取url中的一部分
+                const param = (window.location.search).substring(1).split('&');
+                const act = param[0];
                 axios.get("http://localhost:8080/user/account?account="+act).then((res)=>{
                     const json = JSON.stringify(res.data.data);//格式化Json数据
                     const r = eval('(' + json + ')');//转json字符串
