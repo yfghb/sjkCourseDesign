@@ -48,10 +48,10 @@
                         <div class="grid-content bg-purple">
                             <el-descriptions direction="vertical" :column="4" border>
                                 <el-descriptions-item label="用户名">{{ formData.name }}</el-descriptions-item>
-                                <el-descriptions-item label="已发布文章" :span="2">
+                                <el-descriptions-item label="已通过文章数量" :span="2">
                                     <el-tag size="small">{{ passedArticle }}</el-tag>
                                 </el-descriptions-item>
-                                <el-descriptions-item label="未审核">
+                                <el-descriptions-item label="未通过文章数量">
                                     <el-tag size="small">{{ checkingArticle }}</el-tag>
                                 </el-descriptions-item>
                                 <el-descriptions-item label="描述">{{ formData.description }}</el-descriptions-item>
@@ -131,7 +131,7 @@
         const vm = new Vue({
             el: '#app',
             data: {
-                selectValue: '所有文章',
+                selectValue: '选项1',
                 activeIndex: '2',
                 activeDisabled: false,  //是否开启审核禁用
                 passedArticle: '20',    //已通过的文章数量
@@ -167,18 +167,12 @@
 
             },
             created() {
-                if(this.formData.is_admin){
-                    this.activeDisabled = false;
-                    this.options[3].disabled = false;
-                }else {
-                    this.activeDisabled = true;
-                    this.options[3].disabled = true;
-                }
                 this.init();
             },
             methods: {
                 init(){
                     var account = (window.location.search).substring(1);//截取url中的一部分
+                    this.activeDisabled = true;
                     axios.get("http://localhost:8080/user/account?account="+account).then((res)=>{
                         const json = JSON.stringify(res.data.data);//格式化Json数据
                         const r = eval('(' + json + ')');//转json字符串
@@ -187,7 +181,8 @@
                             this.formData.name = r.name;
                             this.formData.password = r.password;
                             this.formData.id = r.id;
-                            this.formData.headImage = "/common/download?name=" + r.headImage;
+                            this.formData.headImage = r.headImage;
+                            this.formData.description = r.message;
                             axios.get("http://localhost:8080/essay/page?page=1&pageSize=1000&name=passed&id="+r.id).then((res1)=>{
                                 if(res1.data.flag) {
                                     this.passedArticle = res1.data.data.records.length;
@@ -201,6 +196,17 @@
                                 }else{
                                     this.$message.error("异常！");
                                 }
+                            });
+                            axios.get("http://localhost:8080/power/account?account="+ r.account).then((res3)=>{
+                                if (res3.data.flag){
+                                    const json = JSON.stringify(res3.data.data);//格式化Json数据
+                                    const r1 = eval('(' + json + ')');//转json字符串
+                                    if(r1.admin){
+                                        this.formData.is_admin = true;
+                                        this.activeDisabled = false;
+                                        this.options[3].disabled = false;
+                                    }
+                                }else this.$message.error("权限查询异常！");
                             });
                         }else{
                             // console.log(account);
@@ -229,9 +235,8 @@
                     window.location.href = "signIn.html?";
                 },
                 jumpInto(){
-                    alert(this.selectValue)
                     switch (this.selectValue){
-                        case "所有文章":
+                        case "选项1":
                             window.location.href = "main.html?" + this.formData.account + "&all";
                             break;
                         case "选项2":
@@ -351,10 +356,9 @@
                 },
                 submitUpload(response, file, fileList){
                     //console.log(response.msg);
-                    this.formData.headImage = response.msg;
+                    this.formData.headImage = "/common/download?name=" + response.msg;
                     axios.put("http://localhost:8080/user", this.formData).then((res)=>{
                         if(res.data.flag) {
-                            this.formData.headImage =  "/common/download?name=" + response.msg;
                             this.$message.success("上传成功！");
                         }else this.$message.error("修改图片异常");
                     });

@@ -30,21 +30,6 @@
         </el-header>
         <!-- 导航栏 -->
         <el-main>
-            <!-- 搜索栏 -->
-            <el-row>
-                <el-col :span="10" :offset="6">
-                    <div>
-                        <el-input v-model="search" placeholder="请输入内容"></el-input>
-                    </div>
-                </el-col>
-                <el-col :span="2" >
-                    <div>
-                        <el-button type="primary" icon="el-icon-search">搜索</el-button>
-                    </div>
-                </el-col>
-            </el-row>
-            <!-- 搜索栏 -->
-
             <!-- 信息栏 -->
             <el-row v-for="(item,essayId) in itemList" :key="item.essayId">
                 <el-col :span="16" :offset="4">
@@ -111,7 +96,6 @@
     const vm = new Vue({
         el: '#app',
         data: {
-            search: '',             //搜索框文本数据
             activeIndex: '3',       //导航栏默认选中从左往右第一个
             activeDisabled: false,  //是否开启审核禁用
             drawer: false,          //文章框是否可见
@@ -252,13 +236,13 @@
                         axios.put("http://localhost:8080/essay/update",this.textData).then((res2)=>{
                             if(res2.data.flag){
                                 this.$message.success("已通过文章："+this.textData.title);
+                                this.init();
                             } else this.$message.error("异常！");
                         });
                     } else {
                         this.$message.error("出错了！");
                     }
                 });
-                this.init();
             },
             notPass(index){
                 var id = this.itemList[index].essayId;
@@ -275,13 +259,13 @@
                         axios.put("http://localhost:8080/essay/update",this.textData).then((res2)=>{
                             if(res2.data.flag){
                                 this.$message.info("已改变文章："+this.textData.title+"的可见性");
+                                this.init();
                             } else this.$message.error("异常！");
                         });
                     } else {
                         this.$message.error("出错了！");
                     }
                 });
-                this.init();
             },
             banUser(index){
                 var id = this.itemList[index].id;

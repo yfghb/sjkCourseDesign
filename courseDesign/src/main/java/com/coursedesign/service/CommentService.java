@@ -5,5 +5,5 @@ import com.coursedesign.domain.Comment;
 import com.coursedesign.domain.Essay;
 
 public interface CommentService extends IService<Comment> {
-
+    Boolean updateById(Integer id);
 }

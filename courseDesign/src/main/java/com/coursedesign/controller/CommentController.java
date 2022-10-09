@@ -50,4 +50,14 @@ public class CommentController {
         commentService.page(pageInfo,lqw);
         return new R(true,pageInfo);
     }
+
+    /**
+     * 修改评论点赞数量
+     * @param id 传入一个int值id
+     * @return boolean
+     */
+    @PutMapping("/update/praise")
+    public R updatePraise(Integer id){
+        return new R(commentService.updateById(id));
+    }
 }

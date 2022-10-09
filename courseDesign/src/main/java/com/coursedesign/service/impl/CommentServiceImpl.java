@@ -12,4 +12,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentDao, Comment> impleme
 
     @Autowired
     private CommentDao commentDao;
+
+    @Override
+    public Boolean updateById(Integer id) {
+        return commentDao.updateByCommentId(id);
+    }
 }

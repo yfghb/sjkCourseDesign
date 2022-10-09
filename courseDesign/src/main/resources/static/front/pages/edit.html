@@ -78,15 +78,13 @@
 
             textData: {
                 id: '',
+                checkId:1,
                 title: '',
                 article: '',
                 img: '',
             }
         },
         created() {
-            if(this.formData.is_admin){
-                this.activeDisabled = false;
-            }else this.activeDisabled = true;
             this.init();
         },
         methods: {
@@ -102,7 +100,19 @@
                         this.formData.id = r.id;
                         this.formData.headImage = r.headImage;
                         this.textData.id = r.id;
-                        this.textData.img = "/common/download?name=" + r.headImage;
+                        this.textData.img = r.headImage;
+                        axios.get("http://localhost:8080/power/account?account="+ r.account).then((res3)=>{
+                            if (res3.data.flag){
+                                const json = JSON.stringify(res3.data.data);//格式化Json数据
+                                const r1 = eval('(' + json + ')');//转json字符串
+                                this.formData.is_admin = r1.admin;
+                                console.log(r1.admin);
+                                console.log(r1);
+                                if(r1.admin){
+                                    this.activeDisabled = false;
+                                }
+                            }else this.$message.error("权限查询异常！");
+                        });
                     }else{
                         // console.log(account);
                         this.$message.error("异常！");
