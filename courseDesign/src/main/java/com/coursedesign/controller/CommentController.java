@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/comment")
-public class CommentConroller {
+public class CommentController {
 
     @Autowired
     private CommentService commentService;
@@ -42,9 +42,10 @@ public class CommentConroller {
      * @return 评论列表
      */
     @GetMapping("/page")
-    public R page(int page,int pageSize){
-        Page pageInfo = new Page<>(page,pageSize);
+    public R page(int page,int pageSize,Integer id){
+        Page<Comment> pageInfo = new Page<>(page,pageSize);
         LambdaQueryWrapper<Comment> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(id!=null,Comment::getEssayId,id);
         lqw.orderByAsc(Comment::getCreateTime);
         commentService.page(pageInfo,lqw);
         return new R(true,pageInfo);

@@ -1,7 +1,5 @@
 package com.coursedesign.domain;
 
-import java.sql.Timestamp;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
@@ -20,7 +18,7 @@ public class Essay {
 
     private String article;
 
-    private Timestamp createTime;
+    private String createTime;
 
     private Integer praise;
 

@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
-import java.sql.Timestamp;
-
 @Data
 public class Comment {
 
@@ -21,7 +19,7 @@ public class Comment {
 
     private String commentText;
 
-    private Timestamp createTime;
+    private String createTime;
 
     private Integer praise;
 }

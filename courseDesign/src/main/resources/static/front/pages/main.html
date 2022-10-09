@@ -65,7 +65,7 @@
                                 <el-col :span="6" :offset="18">
                                     <div class="bottom clearfix" >
                                         <i class="el-icon-thumb">{{ item.praise }}</i>
-                                        <el-button>点赞</el-button>
+                                        <el-button @click="givePraise(essayId)">点赞</el-button>
                                     </div>
                                 </el-col>
                             </el-row>
@@ -93,8 +93,67 @@
                     :with-header="false"
                     :before-close="drawerClose">
                 <h2 style="text-align: center;">{{ textData.title }}</h2>
-                <textarea disabled='true' style="width: 100%; height: 600px; font-size: 18px">{{ textData.article }}</textarea>
+                <textarea disabled='true' style="width: 100%; height: 600px; font-size: 18px; margin-left: 10px;margin-right: 10px">{{ textData.article }}</textarea>
+                <el-row>
+                    <el-col :span="12" :offset="10">
+                        <el-button type="primary" @click="newCommentVisible = true">新增评论</el-button>
+                    </el-col>
+                </el-row>
+
+                <el-row v-for="(comment,commentId) in commentList">
+                    <el-card shadow="hover" style="margin-top: 20px;">
+                        <el-row>
+                            <el-col :span="3">
+                                <el-image   style="width: 100px; height: 100px"
+                                            :src="comment.headImage">
+                                </el-image>
+                            </el-col>
+                            <el-col :span="18" :offset="2">
+                                <h5>{{ comment.name }}&nbsp;&nbsp;<el-tag>{{ comment.createTime }}</el-tag></h5>
+                                {{ comment.commentText }}
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="6" :offset="18">
+                                <div class="bottom clearfix" >
+                                    <i class="el-icon-thumb">{{ comment.praise }}</i>
+                                    <el-button>点赞</el-button>
+                                </div>
+                            </el-col>
+
+                        </el-row>
+                        <el-row>
+                            <el-col :span="4" :offset="1">
+                                <el-button type="danger" v-if="delCommentBtnVisible" @click="delComment(commentId)">删除</el-button>
+                            </el-col>
+                        </el-row>
+                    </el-card>
+                </el-row>
             </el-drawer>
+            <el-dialog
+                    title="新评论"
+                    :visible.sync="newCommentVisible"
+                    width="30%"
+                    :before-close="handleClose">
+                <span>
+                    <el-row>
+                        <el-col :span="24">
+                            <div>
+                                <el-input
+                                        type="textarea"
+                                        :rows="8"
+                                        placeholder="请输入评论内容"
+                                        v-model="newComment.commentText">
+                                </el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="newCommentVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="submitComment">确 定</el-button>
+                </span>
+            </el-dialog>
         </el-container>
 
     </div>
@@ -107,14 +166,17 @@
         const vm = new Vue({
             el: '#app',
             data: {
-                search: '',             //搜索框文本数据
-                activeIndex: '1',       //导航栏默认选中从左往右第一个
-                activeDisabled: false,  //是否开启审核禁用
-                drawer: false,          //文章框是否可见
-                direction: 'rtl',
-                counts: 0,
-                page: 1,
-                pageSize: 4,
+                search: '',                 //搜索框文本数据
+                activeIndex: '1',           //导航栏默认选中从左往右第一个
+                activeDisabled: false,      //是否开启审核禁用
+                drawer: false,              //文章框是否可见
+                newCommentVisible: false,   //新增评论是否可见
+                direction: 'rtl',           //文章内容框弹出方式：右侧弹出
+                counts: 0,                  //文章总条数
+                page: 1,                    //当前第几页
+                pageSize: 4,                //显示几条
+                itemListId: '',
+                delCommentBtnVisible: false,
 
                 formData: {
                     id: '',
@@ -125,6 +187,12 @@
                     password: '',
                     is_admin: true,
                     description: '文本文本',
+                },
+                newComment: {
+                    essayId: '',
+                    headImage: '',
+                    name: '',
+                    commentText: '',
                 },
                 textData: {
                     essayId: '',
@@ -148,13 +216,27 @@
                         '遇见你的那天我就爱上了你，今天我也爱你，余生我也都会一样爱你。\n' +
                         '\n' +
                         '附上.亲亲我的孩子们.\n',
+                    praise: '',
+                    isVisible: '',
+                    isChecked: '',
                 },
-                itemList: [{essayId: 12,title:'测试',praise:666}],
+                itemList: [{essayId: 12, title:'测试',praise:666}],
+                commentList: [
+                    {essayId: 1, createTime:'2022-10-9', name:'zhangSan', commentId: 1, headImage: '', commentText: '没有你我的时间和经历都毫无意义。与你相爱是我做过最轻松的事。对我来说，你最重要。遇见你的那天我就爱上了你，今天我也爱你，余生我也都会一样爱你', praise:1},
+                    {essayId: 2, createTime:'2022-10-9', name:'liSi', commentId: 2, headImage: '', commentText: '我是评论2', praise:2},
+                    {essayId: 2, createTime:'2022-10-9', name:'wangWu', commentId: 3, headImage: '', commentText: '我是评论3', praise:3},
+                    {essayId: 2, createTime:'2022-10-9', name:'yf', commentId: 4, headImage: '', commentText: '我是评论4', praise:4},
+                    {essayId: 2, createTime:'2022-10-9', name:'ceShi', commentId: 5, headImage: '', commentText: '我是评论5', praise:5},
+                ]
             },
             created() {
                 if(this.formData.is_admin){
                     this.activeDisabled = false;
-                }else this.activeDisabled = true;
+                    this.delCommentBtnVisible = true
+                }else{
+                    this.activeDisabled = true;
+                    this.delCommentBtnVisible = false;
+                }
                 this.init();
             },
             methods: {
@@ -163,7 +245,7 @@
                     const act = param[0];
                     var type = null;
                     if(param.length>1)type = param[1];
-                    console.log(type);
+
                     axios.get("http://localhost:8080/user/account?account="+act).then((res)=>{
                         const json = JSON.stringify(res.data.data);//格式化Json数据
                         const r = eval('(' + json + ')');//转json字符串
@@ -173,7 +255,8 @@
                             this.formData.password = r.password;
                             this.formData.id = r.id;
                             this.formData.headImage = r.headImage;
-                            console.log( this.formData.id);
+                            this.newComment.name = r.name;
+
                             axios.get("http://localhost:8080/essay/page?page="+this.page+"&pageSize="+this.pageSize+"&name="+type+"&id="+r.id).then((res1)=>{
                                 if(res1.data.flag) {
                                     this.itemList = res1.data.data.records;
@@ -196,19 +279,30 @@
                 },
                 articleInit(index){
                     this.drawer = true;
+                    this.itemListId = index;
                     var id = this.itemList[index].essayId;
+                    this.newComment.essayId = id;
                     //console.log(id);
                     axios.get("http://localhost:8080/essay/get?id="+id).then((res)=>{
                        if(res.data.flag){
                            const json = JSON.stringify(res.data.data);//格式化Json数据
                            const r = eval('(' + json + ')');//转json字符串
-                           this.textData.essayId = r.essayId;
+                           this.textData.essayId = id;
                            this.textData.title = r.title;
                            this.textData.article = r.article;
+                           this.textData.praise = r.praise;
+                           this.textData.isVisible = r.isVisible;
+                           this.textData.isChecked = r.isChecked;
+                           this.newComment.headImage = r.img;
                        } else {
                          this.textData.article = "找不到文章内容";
                          this.textData.title = "出错了！";
                        }
+                    });
+                    axios.get("http://localhost:8080/comment/page?page=1&pageSize=1000&id="+id).then((res)=>{
+                        if(res.data.flag){
+                            this.commentList = res.data.data.records;
+                        } else this.$message.error("评论出错了！");
                     });
                 },
                 handleSelect(key, keyPath) {
@@ -241,6 +335,66 @@
                             done();
                         })
                         .catch(_ => {});
+                },
+                givePraise(index){
+                    var id = this.itemList[index].essayId;
+                    axios.get("http://localhost:8080/essay/get?id="+id).then((res)=>{
+                        if(res.data.flag){
+                            const json = JSON.stringify(res.data.data);//格式化Json数据
+                            const r = eval('(' + json + ')');//转json字符串
+                            this.textData.essayId = id;
+                            //console.log(this.textData.essayId);
+                            this.textData.title = r.title;
+                            this.textData.article = r.article;
+                            this.textData.praise = r.praise + 1;
+                            this.textData.isVisible = r.isVisible;
+                            this.textData.isChecked = r.isChecked;
+                            axios.put("http://localhost:8080/essay/update",this.textData).then((res1)=>{
+                                if(res1.data.flag){
+                                    this.$message.success("点赞成功！");
+                                    this.init();
+                                } else this.$message.error("异常！");
+                            });
+                        } else {
+                            this.textData.article = "找不到文章内容";
+                            this.textData.title = "出错了！";
+                        }
+                    });
+
+                },
+                delComment(index){
+                    this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        var id = this.commentList[index].commentId;
+                        axios.delete("http://localhost:8080/comment/delete/"+id).then((res)=>{
+                            if(res.data.flag){
+                                this.$message.success("删除成功！");
+                                this.articleInit(this.itemListId);
+                            } else this.$message.error("删除异常！");
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
+                submitComment(){
+                    if(this.newComment.commentText===''){
+                        this.$message.error("内容不能为空！");
+                    }else{
+                        axios.post("http://localhost:8080/comment",this.newComment).then((res)=>{
+                           if (res.data.flag){
+                               this.$message.success("添加成功！");
+                               this.articleInit(this.itemListId);
+                           } else this.$message.error("添加异常！");
+                        });
+                        this.newCommentVisible = false;
+                    }
+
                 },
                 quit(){
                     window.location.href = "signIn.html?";

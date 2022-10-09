@@ -10,8 +10,6 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
-
 @RestController
 @RequestMapping("/essay")
 public class EssayController {
@@ -48,7 +46,7 @@ public class EssayController {
      */
     @GetMapping("/page")
     public R getLikeName(int page,int pageSize,String name,Integer id) {
-        Page pageInfo = new Page<>(page,pageSize);
+        Page<Essay> pageInfo = new Page<>(page,pageSize);
         LambdaQueryWrapper<Essay> lqw = new LambdaQueryWrapper<>();
 
         switch (name){
