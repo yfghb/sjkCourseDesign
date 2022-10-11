@@ -5,7 +5,7 @@ USE forumsjk;
 CREATE TABLE IF NOT EXISTS `user`(
 	`id` 				INT					AUTO_INCREMENT PRIMARY KEY,
     `name`				VARCHAR(64)			DEFAULT "anonymous",
-    `head_image` 		VARCHAR(16)			DEFAULT NULL,
+    `head_image` 		VARCHAR(128)		DEFAULT NULL,
     `password`			VARCHAR(64)			NOT NULL,
     `account` 			VARCHAR(16)			NOT NULL UNIQUE KEY,
     `message` 			VARCHAR(256)		DEFAULT NULL
@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `essay`(
 	`article` 		    VARCHAR(4096)		NOT NULL,
     `create_time` 	    TIMESTAMP 			DEFAULT CURRENT_TIMESTAMP,
     `praise` 			INT					DEFAULT 0,
+    `img`				VARCHAR(128)		DEFAULT NULL,
     `is_visible` 		BOOLEAN 			DEFAULT FALSE,
     `is_checked`		BOOLEAN 			DEFAULT FALSE,
 	FOREIGN key `essay`(id)	REFERENCES `user`(id) ON DELETE CASCADE
@@ -29,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `essay`(
 CREATE TABLE IF NOT EXISTS `comment`(
     `essay_id` 			INT					NOT NULL,
     `comment_id` 		INT					AUTO_INCREMENT PRIMARY KEY,
-    `head_image` 		VARCHAR(16)			DEFAULT NULL, 
+    `head_image` 		VARCHAR(128)		DEFAULT NULL,
     `name`				VARCHAR(64)			DEFAULT "anonymous",
 	`comment_text`	    VARCHAR(1024) 	    NOT NULL,
     `create_time` 	    TIMESTAMP 			DEFAULT CURRENT_TIMESTAMP,
