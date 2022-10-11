@@ -47,8 +47,10 @@ CREATE TABLE IF NOT EXISTS `power`(
 );
 
 
-INSERT INTO `user`(`name`,`account`,`password`) VALUES ('super_admin','root','root');
+
+INSERT INTO `user`(`name`,`account`,`password`) VALUES ('super_admin','administer','39a8dc079b5f79121a1a7aebb55cb90d');
 INSERT INTO `power`(`account`,`is_admin`) VALUES ('administer',TRUE);
+
 
 
 
