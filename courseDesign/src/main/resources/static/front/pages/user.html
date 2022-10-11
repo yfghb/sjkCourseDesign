@@ -72,6 +72,8 @@
                                 :on-remove="handleRemove"
                                 :on-success="submitUpload"
                                 :on-error="errorUpload"
+                                :on-exceed="handleExceed"
+                                :before-upload="beforeAvatarUpload"
                                 :file-list="fileList">
                             <el-button slot="trigger" size="small" type="primary">上传图片</el-button>
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -378,6 +380,18 @@
                 },
                 beforeRemove(file, fileList) {
                     return this.$confirm(`确定移除 ${ file.name }？`);
+                },
+                beforeAvatarUpload(file) {
+                    const isJPG = file.type === 'image/jpeg';
+                    const isLt2M = file.size / 1024 / 1024 / 4 < 501;
+
+                    if (!isJPG) {
+                        this.$message.error('上传头像图片只能是 JPG 格式!');
+                    }
+                    if (!isLt2M) {
+                        this.$message.error('上传头像图片大小不能超过 500kb!');
+                    }
+                    return isJPG && isLt2M;
                 }
             }
         });
